@@ -30,7 +30,7 @@ export class AuthService {
 
   login(credentials: any) {
     return this.http.post<{ user: User; accessToken: string }>(
-      `${this.apiUrl}auth/login`, credentials
+      `${this.apiUrl}/auth/login`, credentials
     ).pipe(
       tap((response) => {
         this.currentUser.set(response.user);
