@@ -1,0 +1,166 @@
+<div class="saas-dialog">
+  
+  <!-- HEADER ELITE -->
+  <div class="saas-dialog__header">
+    <div class="title-group">
+      <div class="icon-wrapper bg-primary-subtle n8-mr-3">
+        <lucide-icon name="shopping-cart" [size]="20" class="text-primary"></lucide-icon>
+      </div>
+      <div>
+        <h2 class="n8-heading-md">Registrar Nova Venda</h2>
+        <p class="n8-caption text-muted">Vincule um produto/serviço a um cliente.</p>
+      </div>
+    </div>
+    <button class="btn-icon-ghost" (click)="close()">
+      <lucide-icon name="x" [size]="20"></lucide-icon>
+    </button>
+  </div>
+
+  @if (loadingData()) {
+    <div class="saas-dialog__body flex-center" style="min-height: 250px;">
+      <lucide-icon name="loader-2" [size]="32" class="n8-loading-spin text-primary"></lucide-icon>
+      <p class="n8-body text-muted n8-mt-4">Carregando carteira e catálogo...</p>
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="submit()" class="saas-dialog__body">
+      
+      <!-- SEÇÃO 1: DADOS DA VENDA -->
+      <div class="form-section">
+        <h3 class="section-title">Dados Principais</h3>
+        
+        <div class="form-row">
+          <!-- Cliente (Angular Material) -->
+          <div class="form-field" style="flex: 2;">
+            <label class="n8-label">Cliente *</label>
+            <mat-form-field class="elite-mat-field" subscriptSizing="dynamic" appearance="outline">
+              <mat-select formControlName="clientId" placeholder="Selecione um cliente" panelClass="n8-select-panel">
+                @for (client of clients(); track client.id) {
+                  <mat-option [value]="client.id">
+                    <span class="font-bold">{{ client.name }}</span> 
+                    <span class="text-muted n8-ml-2" style="font-size: 0.8rem;">({{ client.document }})</span>
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Data da Venda (Angular Material) -->
+          <div class="form-field" style="flex: 1;">
+            <label class="n8-label">Data da Venda *</label>
+            <mat-form-field class="elite-mat-field date-filter" subscriptSizing="dynamic" appearance="outline">
+              <input matInput [matDatepicker]="pickerDate" formControlName="contractDate" placeholder="DD/MM/AAAA" readonly (click)="pickerDate.open()">
+              <mat-datepicker-toggle matIconSuffix [for]="pickerDate"></mat-datepicker-toggle>
+              <mat-datepicker #pickerDate panelClass="n8-datepicker-panel"></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Produto/Serviço (Angular Material) -->
+          <div class="form-field" style="flex: 2;">
+            <label class="n8-label">Produto / Serviço *</label>
+            <mat-form-field class="elite-mat-field" subscriptSizing="dynamic" appearance="outline">
+              <mat-select formControlName="productServiceId" placeholder="Selecione um item" panelClass="n8-select-panel">
+                @for (item of products(); track item.id) {
+                  <mat-option [value]="item.id">
+                    <div class="n8-flex n8-justify-between w-full">
+                      <span>{{ item.name }}</span> 
+                      <span class="text-success font-medium" style="margin-left: 5px;">{{ item.salePrice | currency:'BRL' }}</span>
+                    </div>
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Quantidade (Input com Máscara e Visual Elite) -->
+          <div class="form-field" style="flex: 1;">
+            <label class="n8-label">Quantidade *</label>
+            <input type="number" class="elite-input" formControlName="quantity" min="1" placeholder="Ex: 1" />
+          </div>
+        </div>
+      </div>
+
+      <hr class="n8-divider" />
+
+      <!-- SEÇÃO 2: CONDIÇÃO DE PAGAMENTO -->
+      <div class="form-section">
+        <h3 class="section-title">Condição de Pagamento</h3>
+        <div class="form-row">
+          <!-- Método (Angular Material) -->
+          <div class="form-field">
+            <label class="n8-label">Método *</label>
+            <mat-form-field class="elite-mat-field" subscriptSizing="dynamic" appearance="outline">
+              <mat-select formControlName="paymentMethod" panelClass="n8-select-panel">
+                <mat-option value="CASH">À vista</mat-option>
+                <mat-option value="INSTALLMENT">Parcelado</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          
+          <!-- Parcelas -->
+          <div class="form-field">
+            <label class="n8-label">Qtd. de Parcelas *</label>
+            <input type="number" class="elite-input" formControlName="installmentsQty" min="1" placeholder="Ex: 1" />
+          </div>
+        </div>
+      </div>
+
+      <hr class="n8-divider" />
+
+      <!-- SEÇÃO 3: INTEGRAÇÃO FINANCEIRA -->
+      <div class="form-section integration-box">
+        <label class="custom-checkbox">
+          <input type="checkbox" formControlName="generateTransaction" />
+          <div class="checkmark">
+            <lucide-icon name="check" [size]="14"></lucide-icon>
+          </div>
+          <span class="font-medium text-primary">Lançar no Contas a Receber (Automático)</span>
+        </label>
+        
+        @if (form.get('generateTransaction')?.value) {
+          <div class="form-row n8-mt-4">
+            <!-- Vencimento -->
+            <div class="form-field">
+              <label class="n8-label">Vencimento da 1ª Parcela *</label>
+              <mat-form-field class="elite-mat-field date-filter" subscriptSizing="dynamic" appearance="outline">
+                <input matInput [matDatepicker]="pickerFirstDue" formControlName="firstDueDate" placeholder="DD/MM/AAAA" readonly (click)="pickerFirstDue.open()">
+                <mat-datepicker-toggle matIconSuffix [for]="pickerFirstDue"></mat-datepicker-toggle>
+                <mat-datepicker #pickerFirstDue panelClass="n8-datepicker-panel"></mat-datepicker>
+              </mat-form-field>
+              @if (form.get('firstDueDate')?.touched && form.get('firstDueDate')?.invalid) {
+                <span class="field-error">Obrigatório.</span>
+              }
+            </div>
+            
+            <!-- Intervalo -->
+            <div class="form-field">
+              <label class="n8-label">Intervalo (Dias)</label>
+              <input type="number" class="elite-input" formControlName="intervalDays" min="1" placeholder="Ex: 30" title="Dias entre o vencimento de cada parcela" />
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Observações -->
+      <div class="form-field n8-mt-2">
+        <label class="n8-label">Observações (opcional)</label>
+        <textarea class="elite-textarea" formControlName="notes" rows="2" placeholder="Informações adicionais sobre o contrato..."></textarea>
+      </div>
+
+      <!-- FOOTER / ACTIONS -->
+      <div class="saas-dialog__actions">
+        <button type="button" class="btn-ghost" (click)="close()">Cancelar</button>
+        <button type="submit" class="n8-btn n8-btn--primary" [disabled]="saving() || loadingData()">
+          @if (saving()) {
+            <lucide-icon name="loader-2" [size]="16" class="n8-loading-spin"></lucide-icon>
+            <span>Processando...</span>
+          } @else {
+            <lucide-icon name="check" [size]="16"></lucide-icon>
+            <span>Confirmar Venda</span>
+          }
+        </button>
+      </div>
+    </form>
+  }
+</div>

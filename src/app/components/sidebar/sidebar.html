@@ -1,0 +1,71 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed()" [class.mobile-open]="isMobileOpen()">
+
+  <div class="brand">
+    @if (isCollapsed()) {
+      <div style="color: var(--n8-blue); display: flex; align-items: center; justify-content: center;">
+        <lucide-icon name="trending-up" [size]="28" strokeWidth="2.5"></lucide-icon>
+      </div>
+    } @else {
+      <h2 style="font-size: 1.3rem; font-weight: 800; color: var(--n8-blue); margin: 0; letter-spacing: -0.5px;">Financeiro PRO</h2>
+    }
+  </div>
+
+  <div class="menu-section">
+    @if (!isCollapsed()) { <span class="section-title">Visão Geral</span> }
+    <nav class="nav-group">
+      <a routerLink="/dashboard" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="layout-dashboard" class="sidebar-icon"></lucide-icon>
+        @if (!isCollapsed()) { <span class="label">Dashboard</span> }
+      </a>
+      <a routerLink="/relatorios" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="bar-chart-2" class="sidebar-icon"></lucide-icon>
+        @if (!isCollapsed()) { <span class="label">Relatórios</span> }
+      </a>
+    </nav>
+  </div>
+
+  <div class="menu-section">
+    @if (!isCollapsed()) { <span class="section-title">Operação</span> }
+    <nav class="nav-group">
+      <a routerLink="/financeiro" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="wallet" class="sidebar-icon"></lucide-icon>
+        @if (!isCollapsed()) { <span class="label">Financeiro</span> }
+      </a>
+
+      <a routerLink="/vendas" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="shopping-cart" class="sidebar-icon"></lucide-icon>
+        @if (!isCollapsed()) { <span class="label">Vendas</span> }
+      </a>
+
+      <a routerLink="/clientes" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="users" class="sidebar-icon"></lucide-icon>
+        @if (!isCollapsed()) { <span class="label">Clientes</span> }
+      </a>
+
+      <a routerLink="/produtos/servicos" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="package" class="sidebar-icon"></lucide-icon>
+        @if (!isCollapsed()) { <span class="label">Catálogo</span> }
+      </a>
+
+      <a routerLink="/agenda" routerLinkActive="active" class="menu-item">
+        <lucide-icon name="calendar" class="sidebar-icon"></lucide-icon>
+        @if (!isCollapsed()) { <span class="label">Agenda e Tarefas</span> }
+      </a>
+    </nav>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="sidebar-footer">
+    <div class="user-badge">{{ getInitials() }}</div>
+    @if (!isCollapsed()) {
+      <div class="user-info">
+        <span class="user-name">{{ authService.currentUser()?.name || 'Administrador' }}</span>
+        <span class="user-role">{{ authService.currentUser()?.role || 'Admin' }}</span>
+      </div>
+      <button class="btn-logout" title="Sair do sistema" (click)="fazerLogout()">
+        <lucide-icon name="log-out" [size]="18"></lucide-icon>
+      </button>
+    }
+  </div>
+</aside>

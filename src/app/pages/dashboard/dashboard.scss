@@ -1,0 +1,310 @@
+// ─── CABEÇALHO E FILTROS ──────────────────────────────────────────────────
+.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+
+  &__title {
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--n8-text-primary);
+      margin-bottom: 0.25rem;
+    }
+    p {
+      font-size: 0.95rem;
+      color: var(--n8-text-secondary);
+      margin: 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 600px) {
+      width: 100%;
+      .n8-mat-select-filter { flex: 1; }
+    }
+  }
+
+  .btn-refresh {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--n8-surface);
+    border: 1px solid var(--n8-border);
+    color: var(--n8-text-secondary);
+    height: 42px;
+    width: 42px;
+    border-radius: var(--n8-radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    
+    &:hover { 
+      background: var(--n8-surface-2); 
+      color: var(--n8-primary); 
+    }
+  }
+}
+
+// ─── ANGULAR MATERIAL OVERRIDES (Padrão Elite) ─────────────────────────
+::ng-deep .n8-mat-select-filter {
+  .mat-mdc-text-field-wrapper {
+    background-color: var(--n8-surface) !important;
+    border-radius: var(--n8-radius-md) !important;
+    height: 42px !important;
+    padding: 0 8px !important;
+  }
+  
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--n8-border) !important;
+  }
+
+  &:hover .mdc-notched-outline__leading,
+  &:hover .mdc-notched-outline__notch,
+  &:hover .mdc-notched-outline__trailing {
+    border-color: var(--n8-blue-subtle) !important;
+  }
+
+  &.mat-focused .mdc-notched-outline__leading,
+  &.mat-focused .mdc-notched-outline__notch,
+  &.mat-focused .mdc-notched-outline__trailing {
+    border-width: 1px !important; // Não deixamos engrossar pra não quebrar layout
+    border-color: var(--n8-blue) !important;
+  }
+
+  .mat-mdc-select-value-text, .mat-mdc-input-element {
+    font-family: var(--n8-font);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--n8-text-primary);
+  }
+
+  &.date-filter {
+    width: 160px;
+    input { cursor: pointer; }
+  }
+}
+
+// ─── ESTRUTURAS DE GRID RESPONSIVA ──────────────────────────────────────
+.top-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+
+  @media (max-width: 1024px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 640px) { grid-template-columns: 1fr; }
+}
+
+.split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+
+  @media (max-width: 1024px) { grid-template-columns: 1fr; }
+}
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+}
+
+.section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--n8-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.25rem;
+}
+
+// ─── CARDS PREMIUM (O Segredo do Design SaaS) ───────────────────────────
+.saas-card {
+  background: var(--n8-surface);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05), 0 1px 2px rgba(16, 24, 40, 0.03); // Sombra super suave
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 6px -1px rgba(16, 24, 40, 0.05), 0 2px 4px -2px rgba(16, 24, 40, 0.03);
+    transform: translateY(-1px);
+  }
+
+  // Header do Card
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--n8-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  // Ícones com fundos redondos suaves
+  .icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+
+    &.bg-success { background: rgba(5, 150, 105, 0.1); color: #059669; }
+    &.bg-danger { background: rgba(220, 38, 38, 0.1); color: #DC2626; }
+    &.bg-warning { background: rgba(217, 119, 6, 0.1); color: #D97706; }
+  }
+
+  // Corpo do Card e Tipografia de Valores
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .value {
+      font-size: 2.125rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--n8-text-primary);
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .value-md {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--n8-text-primary);
+      margin: 0;
+    }
+
+    .value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 4px;
+      
+      .value-suffix {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--n8-text-muted);
+      }
+    }
+
+    .sub-label {
+      font-size: 0.85rem;
+      color: var(--n8-text-secondary);
+      margin: 0;
+    }
+  }
+
+  // Alinhamento horizontal para itens com botão (ex: Inadimplência)
+  &.flex-between {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  // Variação Dark (Saldo em Caixa)
+  &--dark {
+    background: var(--n8-blue-dark);
+    border: none;
+    
+    .label { color: rgba(255, 255, 255, 0.7); }
+    .value { color: #FFFFFF; }
+    .icon-wrapper.bg-dark-glass { background: rgba(255, 255, 255, 0.1); color: #FFF; }
+    .text-light-glass { color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; font-weight: 500; }
+  }
+}
+
+// ─── BADGES E BOTÕES ESPECÍFICOS ──────────────────────────────────────
+.trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: fit-content;
+
+  &.badge-success { background: #ECFDF5; color: #059669; }
+  &.badge-neutral { background: var(--n8-surface-2); color: var(--n8-text-secondary); }
+}
+
+.btn-action {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+
+  &.btn-danger-light {
+    background: #FEF2F2;
+    color: #DC2626;
+    &:hover { background: #FEE2E2; }
+  }
+}
+
+// ─── PLACEHOLDERS E UTILITÁRIOS ────────────────────────────────────────
+.chart-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+  border: 2px dashed var(--n8-border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  color: var(--n8-text-muted);
+
+  p {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 8px;
+    span { font-size: 0.8rem; opacity: 0.7; }
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  gap: 1rem;
+  color: var(--n8-text-secondary);
+}
+
+.text-success { color: #059669 !important; }
+.text-danger { color: #DC2626 !important; }
+.text-warning { color: #D97706 !important; }
+.text-info { color: #0284C7 !important; }
+.text-muted { color: var(--n8-text-muted) !important; }
+.text-primary { color: var(--n8-primary) !important; }
+.font-bold { font-weight: 600; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1.5rem; }

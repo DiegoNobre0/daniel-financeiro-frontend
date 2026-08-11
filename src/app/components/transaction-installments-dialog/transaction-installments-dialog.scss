@@ -1,0 +1,351 @@
+// ─── CONTAINER PRINCIPAL DO MODAL ───────────────────────────────────────
+.saas-dialog {
+  background: var(--n8-surface);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px -10px rgba(16, 24, 40, 0.15); 
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--n8-border);
+    background: var(--n8-surface);
+    
+    .title-group {
+      display: flex;
+      align-items: center;
+
+      h2 {
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--n8-text-primary);
+        margin: 0 0 2px 0;
+      }
+      p { margin: 0; }
+    }
+
+    .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+
+      &.bg-primary-subtle {
+        background: var(--n8-blue-subtle);
+        color: var(--n8-primary);
+      }
+    }
+  }
+
+  &__body {
+    padding: 0 2rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    max-height: 75vh;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar { width: 6px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb { 
+      background: var(--n8-border);
+      border-radius: 10px; 
+    }
+  }
+}
+
+// ─── RESUMO DA CONTA PAI ───────────────────────────────────────────────
+.elite-summary-box {
+  background: #F8FAFC; // Azul acinzentado super leve (Padrão SaaS)
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(10, 46, 140, 0.08);
+}
+
+// ─── CARDS E TABELAS PREMIUM ───────────────────────────────────────────
+.saas-card {
+  background: var(--n8-surface);
+  border-radius: 12px;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05), 0 1px 2px rgba(16, 24, 40, 0.03);
+  position: relative;
+
+  &--table {
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+.n8-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.elite-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+
+  thead {
+    background: rgba(16, 24, 40, 0.02);
+    border-bottom: 1px solid var(--n8-border);
+    
+    th {
+      padding: 1.25rem 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--n8-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      text-align: left;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--n8-divider);
+      transition: background 0.2s ease;
+
+      &:hover:not(.payment-row) { background: var(--n8-surface-2); }
+      &:last-child { border-bottom: none; }
+    }
+
+    td {
+      padding: 1.25rem 0rem;
+      font-size: 0.9rem;
+      color: var(--n8-text-secondary);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+  }
+}
+
+// Estilos Específicos das Linhas
+.paid-row {
+  opacity: 0.65;
+  background-color: #F8FAFC !important;
+  td { text-decoration: line-through; }
+  .badge-success, .text-success { text-decoration: none; } // Mantém badges legíveis
+}
+
+.payment-row {
+  background-color: var(--n8-blue-subtle) !important; // Destaque na edição
+  box-shadow: inset 0 0 0 2px var(--n8-blue);
+  
+  td {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+}
+
+// ─── ANGULAR MATERIAL OVERRIDES (Borda Redonda MDC) ────────────────────
+::ng-deep .elite-mat-field {
+  width: 100%;
+  --mdc-outlined-text-field-container-shape: 8px; 
+  --mdc-outlined-text-field-outline-color: var(--n8-border);
+  --mdc-outlined-text-field-hover-outline-color: var(--n8-blue-subtle);
+  --mdc-outlined-text-field-focus-outline-color: var(--n8-blue);
+
+  .mat-mdc-text-field-wrapper {
+    background-color: var(--n8-surface) !important;
+    height: 44px !important; 
+    padding: 0 !important;
+  }
+
+  .mat-mdc-form-field-flex {
+    height: 44px !important;
+    align-items: center !important;
+  }
+
+  .mdc-notched-outline__leading {
+    border-top-left-radius: 8px !important;
+    border-bottom-left-radius: 8px !important;
+    border-color: var(--n8-border) !important;
+    width: 12px !important; 
+  }
+  .mdc-notched-outline__notch { border-color: var(--n8-border) !important; }
+  .mdc-notched-outline__trailing {
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+    border-color: var(--n8-border) !important;
+  }
+
+  &:hover .mdc-notched-outline__leading,
+  &:hover .mdc-notched-outline__notch,
+  &:hover .mdc-notched-outline__trailing { border-color: var(--n8-blue-subtle) !important; }
+
+  &.mat-focused .mdc-notched-outline__leading,
+  &.mat-focused .mdc-notched-outline__notch,
+  &.mat-focused .mdc-notched-outline__trailing {
+    border-color: var(--n8-blue) !important;
+    border-width: 1px !important; 
+  }
+  
+  &.mat-focused .mat-mdc-text-field-wrapper {
+    box-shadow: 0 0 0 3px rgba(10, 46, 140, 0.08) !important; 
+  }
+
+  .mat-mdc-input-element {
+    font-family: var(--n8-font);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--n8-text-primary);
+    padding-left: 8px !important; 
+  }
+
+  .mat-datepicker-toggle { color: var(--n8-text-muted) !important; }
+  &.date-filter input { cursor: pointer; }
+}
+
+// ─── INPUT NATIVO PARA O VALOR DA PARCELA ──────────────────────────────
+.elite-input {
+  width: 100%;
+  height: 44px; 
+  padding: 0 12px;
+  background-color: var(--n8-surface);
+  border: 1px solid var(--n8-border);
+  border-radius: 8px !important; 
+  color: var(--n8-text-primary);
+  font-family: var(--n8-font);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+
+  &::placeholder { color: var(--n8-text-muted); font-weight: 400; }
+  &:hover { border-color: var(--n8-blue-subtle); }
+  &:focus {
+    outline: none;
+    border-color: var(--n8-blue);
+    box-shadow: 0 0 0 3px rgba(10, 46, 140, 0.08); 
+  }
+}
+
+// ─── MOBILE: TABELA VIRA CARDS (Responsividade Total) ──────────────────
+@media (max-width: 992px) {
+  .elite-table {
+    thead { display: none; }
+
+    tbody {
+      tr {
+        display: flex;
+        flex-direction: column;
+        padding: 1.25rem;
+        gap: 0.75rem;
+        border-bottom: 4px solid var(--n8-bg);
+        background: var(--n8-surface);
+      }
+
+      td {
+        padding: 0 !important;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        white-space: normal;
+        border: none;
+
+        &::before {
+          content: attr(data-label);
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          color: var(--n8-text-muted);
+          text-align: left;
+          flex-shrink: 0;
+          margin-right: 1rem;
+        }
+
+        &[data-label="Parcela"] {
+          margin-bottom: 0.5rem;
+          &::before { display: none; }
+          font-size: 1.1rem;
+        }
+
+        &[data-label="Ações"], &[data-label="Confirmar"] {
+          margin-top: 1rem;
+          padding-top: 1rem !important;
+          border-top: 1px solid var(--n8-divider);
+          justify-content: flex-end;
+          &::before { display: none; }
+        }
+        
+        // Ajuste para quando a linha virar formulário no celular
+        &[data-label="Data do Pagamento"], &[data-label="Valor Pago (R$)"] {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+          margin-top: 0.5rem;
+          
+          &::before { display: none; } // Ocultei o before para usar a label nativa em cima do input
+          .elite-mat-field, .elite-input { width: 100%; }
+        }
+      }
+    }
+  }
+}
+
+// ─── BOTÕES E ESTADOS ──────────────────────────────────────────────────
+.btn-icon-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--n8-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover { background: var(--n8-surface-2); color: var(--n8-text-primary); }
+}
+
+.n8-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &--success {
+    background: var(--n8-success);
+    color: #FFFFFF;
+    box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2); 
+    &:hover:not(:disabled) {
+      background: #047857;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3);
+    }
+  }
+
+  &:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
+}
+
+.flex-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+// Badges
+.badge-success { background: #ECFDF5; color: #059669; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
+.badge-warning { background: #FFFBEB; color: #D97706; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
+.badge-danger { background: #FEF2F2; color: #DC2626; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
+.badge-info { background: #F0F9FF; color: #0284C7; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
+.badge-neutral { background: var(--n8-surface-2); color: var(--n8-text-secondary); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
+
+.text-primary { color: var(--n8-primary) !important; }
+.text-success { color: #059669 !important; }
+.text-danger { color: #DC2626 !important; }
+.text-warning { color: #D97706 !important; }
+.text-muted { color: var(--n8-text-muted) !important; }
+.font-bold { font-weight: 700; }
+.font-medium { font-weight: 500; }

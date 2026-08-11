@@ -1,0 +1,205 @@
+<!-- HEADER: TÍTULO -->
+<div class="elite-page-header n8-mb-6">
+  <h1 class="n8-heading-xl">Central de Relatórios</h1>
+  <p class="n8-body n8-text-muted">Análises financeiras detalhadas da sua operação.</p>
+</div>
+
+<!-- CONTROLES: TABS E FILTROS -->
+<div class="elite-controls-bar n8-mb-8">
+  
+  <!-- Tabs (Esquerda) -->
+  <div class="saas-tabs-wrapper">
+    <div class="saas-tabs">
+      <button class="saas-tabs__btn" [class.active]="activeTab() === 'CASH_FLOW'" (click)="setTab('CASH_FLOW')">
+        <lucide-icon name="arrow-right-left" [size]="16"></lucide-icon> Fluxo
+      </button>
+      <button class="saas-tabs__btn" [class.active]="activeTab() === 'REVENUE'" (click)="setTab('REVENUE')">
+        <lucide-icon name="trending-up" [size]="16"></lucide-icon> Faturamento
+      </button>
+      <button class="saas-tabs__btn" [class.active]="activeTab() === 'OVERDUE'" (click)="setTab('OVERDUE')">
+        <lucide-icon name="alert-triangle" [size]="16"></lucide-icon> Inadimplência
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros (Direita) -->
+  <div class="elite-filters" [formGroup]="dateForm">
+    <mat-form-field class="n8-mat-select-filter date-filter" subscriptSizing="dynamic" appearance="outline">
+      <input matInput [matDatepicker]="pickerStart" formControlName="startDate" placeholder="Data inicial" readonly (click)="pickerStart.open()">
+      <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
+      <mat-datepicker #pickerStart panelClass="n8-datepicker-panel"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="n8-mat-select-filter date-filter" subscriptSizing="dynamic" appearance="outline">
+      <input matInput [matDatepicker]="pickerEnd" formControlName="endDate" placeholder="Data final" readonly (click)="pickerEnd.open()">
+      <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+      <mat-datepicker #pickerEnd panelClass="n8-datepicker-panel"></mat-datepicker>
+    </mat-form-field>
+
+    <button class="n8-btn n8-btn--primary elite-filter-btn" (click)="applyFilters()">
+      <lucide-icon name="filter" [size]="16"></lucide-icon> Filtrar
+    </button>
+  </div>
+
+</div>
+
+<!-- ==========================================
+     CONTEÚDO: FLUXO DE CAIXA
+=========================================== -->
+@if (activeTab() === 'CASH_FLOW' && cashFlowData(); as data) {
+  <div class="top-cards-grid n8-mb-8">
+    <div class="saas-card">
+      <div class="saas-card__header">
+        <span class="label">Total Entradas</span>
+        <div class="icon-wrapper bg-success"><lucide-icon name="arrow-up-right" [size]="20"></lucide-icon></div>
+      </div>
+      <div class="saas-card__body">
+        <!-- O valor agora é escuro, apenas o ícone carrega a cor semântica -->
+        <h2 class="value">{{ data.totalIncome | currency:'BRL' }}</h2>
+      </div>
+    </div>
+
+    <div class="saas-card">
+      <div class="saas-card__header">
+        <span class="label">Total Saídas</span>
+        <div class="icon-wrapper bg-danger"><lucide-icon name="arrow-down-right" [size]="20"></lucide-icon></div>
+      </div>
+      <div class="saas-card__body">
+        <h2 class="value">{{ data.totalExpense | currency:'BRL' }}</h2>
+      </div>
+    </div>
+
+    <div class="saas-card saas-card--dark">
+      <div class="saas-card__header">
+        <span class="label">Balanço do Período</span>
+        <div class="icon-wrapper bg-dark-glass"><lucide-icon name="scale" [size]="20"></lucide-icon></div>
+      </div>
+      <div class="saas-card__body">
+        <h2 class="value" [ngClass]="data.totalBalance >= 0 ? 'text-success-light' : 'text-danger-light'">
+          {{ data.totalBalance | currency:'BRL' }}
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="saas-card saas-card--table">
+    <div class="n8-table-wrapper">
+      <table class="n8-table elite-table">
+        <thead>
+          <tr>
+            <th>Período</th>
+            <th class="n8-text-right">Entradas</th>
+            <th class="n8-text-right">Saídas</th>
+            <th class="n8-text-right">Saldo</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (point of data.points; track point.period) {
+            <tr>
+              <td class="font-medium">{{ point.period }}</td>
+              <td class="n8-text-right text-success font-medium">{{ point.income | currency:'BRL' }}</td>
+              <td class="n8-text-right text-danger font-medium">{{ point.expense | currency:'BRL' }}</td>
+              <td class="n8-text-right font-bold" [ngClass]="point.balance >= 0 ? 'text-success' : 'text-danger'">
+                {{ point.balance | currency:'BRL' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+
+<!-- ==========================================
+     CONTEÚDO: FATURAMENTO POR CLIENTE
+=========================================== -->
+@if (activeTab() === 'REVENUE' && revenueData(); as data) {
+  <div class="saas-card saas-card--table">
+    <div class="n8-table-wrapper">
+      <table class="n8-table elite-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th class="n8-text-center">Contratos Fechados</th>
+            <th class="n8-text-right">Faturamento Total</th>
+            <th class="n8-text-right">Lucro Estimado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of data.data; track item.clientId) {
+            <tr>
+              <td class="font-medium">
+                <div class="n8-flex n8-align-center n8-gap-3">
+                  <div class="avatar-mini">{{ item.clientName.charAt(0) }}</div>
+                  {{ item.clientName }}
+                </div>
+              </td>
+              <td class="n8-text-center"><span class="badge-neutral">{{ item.contractsCount }}</span></td>
+              <td class="n8-text-right font-bold">{{ item.totalRevenue | currency:'BRL' }}</td>
+              <td class="n8-text-right text-success font-bold">{{ item.totalProfit | currency:'BRL' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+
+<!-- ==========================================
+     CONTEÚDO: INADIMPLÊNCIA
+=========================================== -->
+@if (activeTab() === 'OVERDUE' && overdueData(); as data) {
+  <div class="mini-grid n8-mb-8">
+    <div class="saas-card saas-card--alert">
+      <div class="saas-card__header">
+        <span class="label text-danger">Total em Atraso</span>
+        <div class="icon-wrapper bg-danger"><lucide-icon name="alert-triangle" [size]="20"></lucide-icon></div>
+      </div>
+      <div class="saas-card__body">
+        <h2 class="value text-danger">{{ data.totalOverdueAmount | currency:'BRL' }}</h2>
+      </div>
+    </div>
+    
+    <div class="saas-card">
+      <div class="saas-card__header">
+        <span class="label">Clientes Devedores</span>
+        <div class="icon-wrapper bg-warning"><lucide-icon name="users" [size]="20"></lucide-icon></div>
+      </div>
+      <div class="saas-card__body">
+        <h2 class="value">{{ data.totalOverdueClients }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="saas-card saas-card--table">
+    <div class="n8-table-wrapper">
+      <table class="n8-table elite-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th class="n8-text-center">Parcelas Atrasadas</th>
+            <th>Vencimento Mais Antigo</th>
+            <th class="n8-text-right">Dívida Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of data.data; track item.clientId) {
+            <tr>
+              <td class="font-medium">{{ item.clientName }}</td>
+              <td class="n8-text-center"><span class="badge-danger">{{ item.overdueInstallmentsCount }}</span></td>
+              <td class="text-muted">{{ item.oldestDueDate | date:'dd/MM/yyyy' }}</td>
+              <td class="n8-text-right text-danger font-bold">{{ item.overdueTotalAmount | currency:'BRL' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+
+@if (loading()) {
+  <div class="elite-loading-state">
+    <lucide-icon name="loader-2" [size]="32" class="n8-loading-spin text-primary"></lucide-icon>
+    <p class="n8-body n8-mt-4">Processando relatório...</p>
+  </div>
+}

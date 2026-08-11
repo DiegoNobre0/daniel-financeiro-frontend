@@ -1,0 +1,82 @@
+<!-- login.component.html -->
+<div class="n8-login-wrapper">
+
+  <div class="n8-login-brand">
+    <div class="n8-login-brand__glow-1"></div>
+    <div class="n8-login-brand__glow-2"></div>
+
+    <div class="n8-login-brand__content">
+      <h1 class="tagline">Seja bem-vindo ao</h1>
+
+      <!-- Usei uma classe de texto em vez de logo para facilitar, ou você pode colocar a logo real do Daniel aqui -->
+      <h2 class="main-brand-logo text-logo">Financeiro PRO</h2>
+      
+      <p class="tagline-sub">O painel inteligente para gestão de fluxo de caixa, inadimplência e controle total de contratos.</p>
+    </div>
+  </div>
+
+  <div class="n8-login-form-section">
+    <div class="n8-login-card">
+
+      <header class="n8-login-card__header">
+        <div class="header-icon-box">
+          <lucide-icon name="trending-up" [size]="32"></lucide-icon>
+        </div>
+        <h2>Acesso ao Sistema</h2>
+        <p>Insira suas credenciais para continuar</p>
+      </header>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="n8-login-form">
+        
+        @if (errorMessage()) {
+          <div class="n8-error-box">
+            <lucide-icon name="alert-triangle" [size]="16"></lucide-icon>
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input 
+            id="email"
+            type="email" 
+            formControlName="email" 
+            placeholder="daniel@email.com.br" 
+            class="n8-input"
+          >
+        </div>
+
+        <div class="form-group">
+          <div class="label-row">
+            <label for="password">Senha</label>
+            <a href="#" class="forgot-link">Esqueceu a senha?</a>
+          </div>
+          
+          <div class="input-with-icon">
+            <input 
+              id="password"
+              [type]="showPassword() ? 'text' : 'password'" 
+              formControlName="password" 
+              placeholder="••••••••" 
+              class="n8-input"
+            >
+            <button type="button" class="icon-btn" (click)="togglePassword()" aria-label="Mostrar ou ocultar senha">
+              <lucide-icon [name]="showPassword() ? 'eye-off' : 'eye'"></lucide-icon>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="n8-btn-submit" [disabled]="loginForm.invalid || isLoading()">
+          @if (isLoading()) {
+            <lucide-icon name="loader-2" class="n8-loading-spin"></lucide-icon>
+            <span>Autenticando...</span>
+          } @else {
+            <lucide-icon name="log-in" [size]="18"></lucide-icon>
+            <span>Entrar no Painel</span>
+          }
+        </button>
+      </form>
+
+    </div>
+  </div>
+</div>

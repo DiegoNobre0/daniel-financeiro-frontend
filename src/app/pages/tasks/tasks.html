@@ -1,0 +1,119 @@
+<!-- HEADER ELITE -->
+<div class="elite-page-header n8-flex n8-justify-between n8-align-center n8-mb-6">
+  <div>
+    <h1 class="n8-heading-xl">Agenda de Tarefas</h1>
+    <p class="n8-body n8-text-muted">Acompanhe seus compromissos e pendências.</p>
+  </div>
+  <div class="header-actions">
+    <button class="n8-btn n8-btn--primary" (click)="openCreateDialog()">
+      <lucide-icon name="plus" [size]="18"></lucide-icon>
+      <span>Nova Tarefa</span>
+    </button>
+  </div>
+</div>
+
+<div class="agenda-layout">
+  
+  <!-- COLUNA ESQUERDA: CALENDÁRIO -->
+  <aside class="agenda-sidebar">
+    <div class="saas-card p-0">
+      <!-- Usamos o mat-calendar solto para ficar sempre visível -->
+      <mat-calendar 
+        class="elite-calendar"
+        [selected]="selectedDate()" 
+        (selectedChange)="onDateSelected($event)">
+      </mat-calendar>
+    </div>
+  </aside>
+
+  <!-- COLUNA DIREITA: LISTA DE TAREFAS -->
+  <main class="agenda-content">
+    <div class="agenda-content-header n8-flex n8-justify-between n8-align-center n8-mb-4">
+      <h2 class="n8-heading-md">
+        @if (selectedDate()?.toDateString() === (undefined | date:'toDateString')) {
+          Tarefas de Hoje
+        } @else {
+          Tarefas para {{ selectedDate() | date:'dd/MM/yyyy' }}
+        }
+      </h2>
+      <span class="badge-neutral">{{ filteredTasks().length }} item(ns)</span>
+    </div>
+
+    @if (loading() && tasks().length === 0) {
+      <div class="elite-state-box">
+        <lucide-icon name="loader-2" [size]="32" class="n8-loading-spin text-primary"></lucide-icon>
+      </div>
+    } @else if (filteredTasks().length === 0) {
+      <div class="elite-state-box empty-state">
+        <div class="icon-wrapper bg-dark-glass n8-mb-4">
+          <lucide-icon name="calendar-check" [size]="28"></lucide-icon>
+        </div>
+        <h3 class="n8-heading-md">Tudo limpo por aqui!</h3>
+        <p class="n8-caption text-muted">Não há tarefas agendadas para esta data.</p>
+      </div>
+    } @else {
+      <div class="tasks-list">
+        @for (task of filteredTasks(); track task.id) {
+          
+          <!-- CARD DE TAREFA ELITE -->
+          <div class="task-card" [class.task-card--done]="task.status === 'DONE'">
+            <!-- Faixa lateral de status (Vermelha se atrasada, Cinza se concluída) -->
+            <div class="task-card__indicator" 
+                 [class.indicator--danger]="isOverdue(task.dueDate) && task.status !== 'DONE'"
+                 [class.indicator--success]="task.status === 'DONE'">
+            </div>
+            
+            <div class="task-card__content">
+              
+              <!-- Checkbox Customizado -->
+              <button class="task-checkbox" 
+                      [class.checked]="task.status === 'DONE'" 
+                      (click)="toggleDone(task)">
+                <lucide-icon [name]="task.status === 'DONE' ? 'check-circle-2' : 'circle'" [size]="24"></lucide-icon>
+              </button>
+
+              <div class="task-details">
+                <div class="task-header n8-flex n8-justify-between n8-align-center">
+                  <h3 class="task-title" [class.text-strike]="task.status === 'DONE'">{{ task.title }}</h3>
+                  
+                  <!-- Badges de Prioridade -->
+                  @if (task.priority === 'HIGH') {
+                    <span class="badge-danger n8-ml-2">Alta</span>
+                  } @else if (task.priority === 'MEDIUM') {
+                    <span class="badge-warning n8-ml-2">Média</span>
+                  } @else {
+                    <span class="badge-neutral n8-ml-2">Baixa</span>
+                  }
+                </div>
+                
+                @if (task.description) {
+                  <p class="task-desc">{{ task.description }}</p>
+                }
+                
+                <div class="task-footer n8-flex n8-gap-4 n8-mt-2">
+                  <span class="task-meta" [class.text-danger]="isOverdue(task.dueDate) && task.status !== 'DONE'">
+                    <lucide-icon name="clock" [size]="14"></lucide-icon>
+                    Vence em {{ task.dueDate | date:'dd/MM' }}
+                  </span>
+                  
+                  @if (task.clientName) {
+                    <span class="task-meta text-primary font-medium">
+                      <lucide-icon name="user" [size]="14"></lucide-icon>
+                      {{ task.clientName }}
+                    </span>
+                  }
+                </div>
+              </div>
+              
+              <!-- Botão de editar (opcional) -->
+              <button class="btn-icon-ghost" title="Editar Tarefa">
+                <lucide-icon name="more-vertical" [size]="20"></lucide-icon>
+              </button>
+
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </main>
+</div>

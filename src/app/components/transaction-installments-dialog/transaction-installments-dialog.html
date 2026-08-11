@@ -1,0 +1,179 @@
+<div class="saas-dialog">
+
+  <!-- HEADER ELITE -->
+  <div class="saas-dialog__header">
+    <div class="title-group">
+      <div class="icon-wrapper bg-primary-subtle n8-mr-3">
+        <lucide-icon name="list-checks" [size]="20" class="text-primary"></lucide-icon>
+      </div>
+      <div>
+        <h2 class="n8-heading-md">Gerenciar Parcelas</h2>
+        <p class="n8-caption text-muted">Visualize e dê baixa nos pagamentos.</p>
+      </div>
+    </div>
+    <button class="btn-icon-ghost" type="button" (click)="close()">
+      <lucide-icon name="x" [size]="20"></lucide-icon>
+    </button>
+  </div>
+
+  @if (loading() || !transaction()) {
+  <div class="saas-dialog__body flex-center" style="min-height: 250px;">
+    <lucide-icon name="loader-2" [size]="32" class="n8-loading-spin text-primary"></lucide-icon>
+    <p class="n8-body text-muted n8-mt-4">Buscando informações da conta...</p>
+  </div>
+  } @else {
+  <div class="saas-dialog__body" style="padding-top: 1.5rem;">
+
+    <!-- RESUMO DA CONTA PAI (Elite Summary Box) -->
+    <div class="elite-summary-box n8-flex n8-justify-between n8-align-center">
+      <div>
+        <h3 class="n8-heading-sm font-bold">{{ transaction()!.description }}</h3>
+        <p class="n8-caption text-muted n8-mt-1">
+          <span class="font-medium" [ngClass]="transaction()!.type === 'INCOME' ? 'text-success' : 'text-danger'">
+            {{ transaction()!.type === 'INCOME' ? 'Receita' : 'Despesa' }}
+          </span>
+          @if (transaction()!.client) { • {{ transaction()!.client?.name }} }
+        </p>
+      </div>
+      <div class="n8-text-right">
+        <p class="n8-heading-md font-bold"
+          [ngClass]="transaction()!.type === 'INCOME' ? 'text-success' : 'text-danger'">
+          {{ transaction()!.totalValue | currency:'BRL' }}
+        </p>
+        <div class="n8-mt-1">
+          @switch (transaction()!.status) {
+          @case ('PAID') { <span class="badge-success">Pago</span> }
+          @case ('PENDING') { <span class="badge-warning">Pendente</span> }
+          @case ('OVERDUE') { <span class="badge-danger">Atrasado</span> }
+          @case ('PARTIALLY_PAID') { <span class="badge-info">Parcial</span> }
+          @case ('CANCELED') { <span class="badge-neutral">Cancelado</span> }
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- TABELA DE PARCELAS ELITE -->
+    <div class="saas-card saas-card--table n8-mt-4">
+      <div class="n8-table-wrapper">
+        <table class="n8-table elite-table">
+          <thead>
+            <tr>
+              <th>Parc.</th>
+              <th>Vencimento</th>
+              <th>Valor / Restante</th>
+              <th class="n8-text-center">Status</th>
+              <th class="n8-text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (inst of transaction()!.installments; track inst.id) {
+
+            <!-- ==============================================
+                     LINHA: MODO EDIÇÃO (DAR BAIXA)
+                =============================================== -->
+            @if (payingInstallmentId() === inst.id) {
+            <tr class="payment-row" [formGroup]="payForm">
+              <!-- Coluna de Data -->
+              <td colspan="2" data-label="Data do Pagamento">
+                <label class="n8-label n8-mb-1" style="display: block; font-size: 0.75rem;">Data do Pagamento</label>
+                <mat-form-field class="elite-mat-field date-filter" subscriptSizing="dynamic" appearance="outline">
+                  <input matInput [matDatepicker]="pickerPaidDate" formControlName="paidDate" placeholder="DD/MM/AAAA"
+                    readonly (click)="pickerPaidDate.open()">
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerPaidDate"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerPaidDate panelClass="n8-datepicker-panel"></mat-datepicker>
+                </mat-form-field>
+              </td>
+
+              <!-- Coluna de Valor -->
+              <td colspan="2" data-label="Valor Pago (R$)">
+                <label class="n8-label n8-mb-1" style="display: block; font-size: 0.75rem;">Valor Pago</label>
+                <input type="text" class="elite-input" formControlName="amount" placeholder="R$ 0,00" mask="separator.2"
+                  prefix="R$ " thousandSeparator="." decimalMarker="," />
+              </td>
+
+              <!-- Coluna de Ações -->
+              <td data-label="Confirmar" class="n8-text-right">
+                <div class="n8-flex n8-gap-2 n8-justify-end" style="margin-top: 18px;">
+                  <button class="btn-icon-ghost" type="button" (click)="cancelPayment()" [disabled]="savingPayment()"
+                    title="Cancelar">
+                    <lucide-icon name="x" [size]="18"></lucide-icon>
+                  </button>
+                  <!-- O botão verde agora está com visual Elite -->
+                  <button class="n8-btn n8-btn--success" style="padding: 0 12px; height: 44px; min-width: 90px;"
+                    type="button" (click)="confirmPayment(inst.id)" [disabled]="savingPayment()">
+                    @if (savingPayment()) {
+                    <lucide-icon name="loader-2" [size]="18" class="n8-loading-spin"></lucide-icon>
+                    } @else {
+                    <lucide-icon name="check" [size]="18"></lucide-icon>
+                    <span class="n8-ml-1">Salvar</span>
+                    }
+                  </button>
+                </div>
+              </td>
+            </tr>
+            }
+
+            <!-- ==============================================
+                     LINHA: MODO LEITURA
+                =============================================== -->
+            @else {
+            <tr [class.paid-row]="inst.status === 'PAID'">
+              <td data-label="Parcela" class="font-bold n8-text-primary">
+                {{ inst.number }} / {{ transaction()!.installmentsQty }}
+              </td>
+
+              <td data-label="Vencimento">
+                <div class="n8-flex n8-flex-col n8-gap-1">
+                  <span class="font-medium" [class.text-danger]="inst.status === 'OVERDUE'">
+                    {{ inst.dueDate | date:'dd/MM/yyyy' }}
+                  </span>
+                  @if (inst.paidDate) {
+                  <span class="n8-caption text-success font-medium">Pago em {{ inst.paidDate | date:'dd/MM/yy' }}</span>
+                  }
+                </div>
+              </td>
+
+              <td data-label="Valor">
+                <div class="n8-flex n8-flex-col n8-gap-1">
+                  <span class="n8-body font-bold text-primary">{{ inst.amount | currency:'BRL' }}</span>
+                  @if (inst.paidAmount > 0 && inst.paidAmount < inst.amount) { <span
+                    class="n8-caption text-warning font-medium">Falta: {{ (inst.amount - inst.paidAmount) |
+                    currency:'BRL' }}</span>
+                    }
+                </div>
+              </td>
+
+              <td data-label="Status" class="n8-text-center">
+                @switch (inst.status) {
+                @case ('PAID') { <span class="badge-success">Pago</span> }
+                @case ('PENDING') { <span class="badge-warning">Pendente</span> }
+                @case ('OVERDUE') { <span class="badge-danger">Atrasado</span> }
+                @case ('CANCELED') { <span class="badge-neutral">Cancelado</span> }
+                }
+              </td>
+
+              <td data-label="Ações" class="n8-text-right">
+                <div class="n8-flex n8-justify-end">
+                  @if (inst.status !== 'PAID' && inst.status !== 'CANCELED') {
+                  <!-- Usando o botão verde Elite para dar baixa -->
+                  <button class="n8-btn n8-btn--success" style="padding: 6px 12px; font-size: 0.8rem;"
+                    (click)="openPaymentForm(inst)">
+                    <lucide-icon name="check-circle" [size]="14"></lucide-icon>
+                    Baixa
+                  </button>
+                  } @else {
+                  <span class="text-muted">—</span>
+                  }
+                </div>
+              </td>
+            </tr>
+            }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  }
+</div>

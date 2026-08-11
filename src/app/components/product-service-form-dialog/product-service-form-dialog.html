@@ -1,0 +1,104 @@
+<div class="saas-dialog">
+  
+  <!-- HEADER ELITE -->
+  <div class="saas-dialog__header">
+    <div class="title-group">
+      <div class="icon-wrapper bg-primary-subtle n8-mr-3">
+        <lucide-icon [name]="isEdit ? 'edit' : 'package-plus'" [size]="24" class="text-primary"></lucide-icon>
+      </div>
+      <div>
+        <h2 class="n8-heading-md">{{ isEdit ? 'Editar Item' : 'Novo Item' }}</h2>
+        <p class="n8-caption text-muted">Cadastre produtos e serviços no seu catálogo.</p>
+      </div>
+    </div>
+    <button class="btn-icon-ghost" type="button" (click)="close()">
+      <lucide-icon name="x" [size]="20"></lucide-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="saas-dialog__body">
+    
+    <div class="form-row">
+      <!-- Tipo do Item -->
+      <div class="form-field" style="flex: 1;">
+        <label class="n8-label">Tipo *</label>
+        <mat-form-field class="elite-mat-field" subscriptSizing="dynamic" appearance="outline">
+          <mat-select formControlName="type" panelClass="n8-select-panel">
+            <mat-option value="PRODUCT">Produto</mat-option>
+            <mat-option value="SERVICE">Serviço</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Nome -->
+      <div class="form-field" style="flex: 2;">
+        <label class="n8-label">Nome do Item *</label>
+        <input type="text" class="elite-input" formControlName="name" placeholder="Ex: Ração Golden 15kg" />
+        @if (form.get('name')?.touched && form.get('name')?.invalid) {
+          <span class="field-error">Obrigatório. Mín. 2 caracteres.</span>
+        }
+      </div>
+    </div>
+
+    <!-- Descrição -->
+    <div class="form-field">
+      <label class="n8-label">Descrição Breve</label>
+      <input type="text" class="elite-input" formControlName="description" placeholder="Ex: Saco de ração para cães adultos..." />
+    </div>
+
+    <div class="form-row">
+      <!-- Custo Unitário -->
+      <div class="form-field">
+        <label class="n8-label">Custo Unitário</label>
+        <input 
+          type="text" 
+          class="elite-input" 
+          formControlName="costPrice" 
+          placeholder="R$ 0,00"
+          mask="separator.2" 
+          prefix="R$ " 
+          thousandSeparator="." 
+          decimalMarker="," 
+        />
+      </div>
+
+      <!-- Preço de Venda -->
+      <div class="form-field">
+        <label class="n8-label">Preço de Venda *</label>
+        <input 
+          type="text" 
+          class="elite-input" 
+          formControlName="salePrice" 
+          placeholder="R$ 0,00"
+          mask="separator.2" 
+          prefix="R$ " 
+          thousandSeparator="." 
+          decimalMarker="," 
+        />
+        @if (form.get('salePrice')?.touched && form.get('salePrice')?.invalid) {
+          <span class="field-error">Obrigatório.</span>
+        }
+      </div>
+
+      <!-- Unidade -->
+      <div class="form-field">
+        <label class="n8-label">Unidade</label>
+        <input type="text" class="elite-input" formControlName="unit" placeholder="Ex: un, kg, hr" />
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="saas-dialog__actions">
+      <button type="button" class="btn-ghost" (click)="close()">Cancelar</button>
+      <button type="submit" class="n8-btn n8-btn--primary" [disabled]="saving()">
+        @if (saving()) {
+          <lucide-icon name="loader-2" [size]="16" class="n8-loading-spin"></lucide-icon>
+          <span>Processando...</span>
+        } @else {
+          <lucide-icon name="save" [size]="16"></lucide-icon>
+          <span>{{ isEdit ? 'Salvar Alterações' : 'Cadastrar Item' }}</span>
+        }
+      </button>
+    </div>
+  </form>
+</div>

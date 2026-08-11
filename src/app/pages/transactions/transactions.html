@@ -1,0 +1,157 @@
+<!-- HEADER: TÍTULO E AÇÕES PRINCIPAIS -->
+<div class="elite-page-header n8-flex n8-justify-between n8-align-center n8-mb-6">
+  <div>
+    <h1 class="n8-heading-xl">Financeiro</h1>
+    <p class="n8-body n8-text-muted">Gestão centralizada de contas a pagar e a receber.</p>
+  </div>
+
+  <div class="header-actions n8-flex n8-gap-3">
+    <button class="n8-btn n8-btn--danger-light" (click)="openCreateDialog('EXPENSE')">
+      <lucide-icon name="arrow-down-circle" [size]="18"></lucide-icon>
+      <span>Nova Despesa</span>
+    </button>
+    <button class="n8-btn n8-btn--success" (click)="openCreateDialog('INCOME')">
+      <lucide-icon name="arrow-up-circle" [size]="18"></lucide-icon>
+      <span>Nova Receita</span>
+    </button>
+  </div>
+</div>
+
+<!-- CONTROLES: FILTROS -->
+<div class="elite-controls-bar n8-mb-6">
+  <div class="elite-filters w-full n8-flex n8-justify-end">
+
+    <mat-form-field class="n8-mat-select-filter" subscriptSizing="dynamic" appearance="outline">
+      <mat-select [ngModel]="typeFilter()" (ngModelChange)="onTypeFilterChange($event)" panelClass="n8-select-panel"
+        placeholder="Tipo de Movimentação">
+        <mat-option value="ALL">Todas Movimentações</mat-option>
+        <mat-option value="INCOME">Apenas Receitas (+)</mat-option>
+        <mat-option value="EXPENSE">Apenas Despesas (-)</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="n8-mat-select-filter" subscriptSizing="dynamic" appearance="outline">
+      <mat-select [ngModel]="statusFilter()" (ngModelChange)="onStatusFilterChange($event)" panelClass="n8-select-panel"
+        placeholder="Status">
+        <mat-option value="ALL">Todos os Status</mat-option>
+        <mat-option value="PENDING">Pendente</mat-option>
+        <mat-option value="PARTIALLY_PAID">Parcialmente Pago</mat-option>
+        <mat-option value="PAID">Pago</mat-option>
+        <mat-option value="OVERDUE">Atrasado</mat-option>
+        <mat-option value="CANCELED">Cancelado</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+</div>
+
+<!-- CONTEÚDO: TABELA ELITE -->
+<div class="saas-card saas-card--table">
+
+  @if (loading()) {
+  <div class="elite-state-box">
+    <lucide-icon name="loader-2" [size]="32" class="n8-loading-spin text-primary"></lucide-icon>
+    <p class="n8-body n8-mt-4">Carregando financeiro...</p>
+  </div>
+  } @else if (transactions().length === 0) {
+  <div class="elite-state-box empty-state">
+    <div class="icon-wrapper bg-dark-glass n8-mb-4"><lucide-icon name="wallet" [size]="28"></lucide-icon></div>
+    <h3 class="n8-heading-md">Nenhum lançamento encontrado</h3>
+    <p class="n8-caption text-muted">Ajuste os filtros acima ou crie uma nova movimentação.</p>
+  </div>
+  } @else {
+  <div class="n8-table-wrapper">
+    <table class="n8-table elite-table">
+      <thead>
+        <tr>
+          <th>Descrição</th>
+          <th>Cliente / Origem</th>
+          <th class="n8-text-right">Valor Total</th>
+          <th class="n8-text-center">Parcelas</th>
+          <th class="n8-text-center">Status</th>
+          <th class="n8-text-right">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (tx of transactions(); track tx.id) {
+        <tr>
+          <td data-label="Descrição" class="font-medium">
+            <div class="n8-flex n8-align-center n8-gap-3">
+              <!-- Ícone semântico suave -->
+              <div class="icon-mini" [ngClass]="tx.type === 'INCOME' ? 'bg-success' : 'bg-danger'">
+                <lucide-icon [name]="tx.type === 'INCOME' ? 'arrow-up-right' : 'arrow-down-right'" [size]="16"
+                  [class.text-success]="tx.type === 'INCOME'" [class.text-danger]="tx.type === 'EXPENSE'">
+                </lucide-icon>
+              </div>
+              <span class="n8-text-primary">{{ tx.description }}</span>
+            </div>
+          </td>
+
+          <td data-label="Cliente / Origem">
+            <span class="n8-text-secondary">{{ tx.client?.name || '—' }}</span>
+            @if(tx.contractId) { <span class="badge-neutral n8-ml-2" style="font-size: 0.65rem;">Venda</span> }
+          </td>
+
+          <td data-label="Valor Total" class="n8-text-right font-bold"
+            [ngClass]="tx.type === 'INCOME' ? 'text-success' : 'text-danger'">
+            {{ tx.totalValue | currency:'BRL' }}
+          </td>
+
+          <td data-label="Parcelas" class="n8-text-center">
+            <span class="n8-text-secondary font-medium">
+              {{ tx.paymentMethod === 'CASH' ? 'À vista' : tx.installmentsQty + 'x' }}
+            </span>
+          </td>
+
+          <!-- transactions.html -->
+          <td data-label="Status" class="n8-text-center">
+            <div class="n8-flex n8-align-center n8-gap-2 n8-justify-center">
+              @switch (tx.status) {
+              @case ('PAID') { <span class="badge-success">Pago</span> }
+              @case ('PENDING') { <span class="badge-warning">Pendente</span> }
+              @case ('OVERDUE') { <span class="badge-danger">Atrasado</span> }
+              @case ('PARTIALLY_PAID') { <span class="badge-info">Parcial</span> }
+              @case ('CANCELED') { <span class="badge-neutral">Cancelado</span> }
+              }
+
+              @if (hasOverdueInstallment(tx) && tx.status !== 'OVERDUE') {
+              <span class="badge-danger" title="Existe parcela atrasada">
+                <lucide-icon name="alert-triangle" [size]="12"></lucide-icon>
+              </span>
+              }
+            </div>
+          </td>
+
+          <td data-label="Ações" class="n8-text-right">
+            <div class="n8-flex n8-gap-2 n8-justify-end">
+              <button class="btn-action-ghost" (click)="manageInstallments(tx)" [disabled]="tx.status === 'CANCELED'">
+                Detalhes
+              </button>
+              @if (tx.status !== 'CANCELED' && tx.status !== 'PAID') {
+              <button class="btn-icon-danger" title="Cancelar" (click)="cancelTransaction(tx)">
+                <lucide-icon name="ban" [size]="16"></lucide-icon>
+              </button>
+              }
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginação -->
+  <div class="elite-pagination n8-flex n8-justify-between n8-align-center">
+    <span class="n8-caption text-muted">{{ total() }} registro(s) encontrado(s)</span>
+    <div class="n8-flex n8-gap-3 n8-align-center">
+      <button class="btn-icon-outline" [disabled]="page() === 1" (click)="goToPage(page() - 1)">
+        <lucide-icon name="chevron-left" [size]="16"></lucide-icon>
+      </button>
+      <span class="n8-caption font-medium">Página {{ page() }} de {{ totalPages() }}</span>
+      <button class="btn-icon-outline" [disabled]="page() === totalPages()" (click)="goToPage(page() + 1)">
+        <lucide-icon name="chevron-right" [size]="16"></lucide-icon>
+      </button>
+    </div>
+  </div>
+  }
+</div>

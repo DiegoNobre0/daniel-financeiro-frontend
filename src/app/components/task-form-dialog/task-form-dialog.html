@@ -1,0 +1,92 @@
+<div class="saas-dialog">
+  
+  <!-- HEADER ELITE -->
+  <div class="saas-dialog__header">
+    <div class="title-group">
+      <div class="icon-wrapper bg-primary-subtle n8-mr-3">
+        <lucide-icon name="check-square" [size]="24" class="text-primary"></lucide-icon>
+      </div>
+      <div>
+        <h2 class="n8-heading-md">Nova Tarefa</h2>
+        <p class="n8-caption text-muted">Crie um lembrete ou agende um compromisso.</p>
+      </div>
+    </div>
+    <button class="btn-icon-ghost" type="button" (click)="close()">
+      <lucide-icon name="x" [size]="20"></lucide-icon>
+    </button>
+  </div>
+
+  <!-- BODY DO MODAL -->
+  <form [formGroup]="form" (ngSubmit)="submit()" class="saas-dialog__body">
+    
+    <div class="form-field">
+      <label class="n8-label">Título da Tarefa *</label>
+      <input type="text" class="elite-input" formControlName="title" placeholder="Ex: Retornar ligação para o cliente..." />
+      @if (form.controls.title.touched && form.controls.title.invalid) {
+        <span class="field-error">Obrigatório (mín. 3 caracteres).</span>
+      }
+    </div>
+
+    <div class="form-row">
+      <!-- Data de Vencimento -->
+      <div class="form-field">
+        <label class="n8-label">Data de Vencimento *</label>
+        <mat-form-field class="elite-mat-field date-filter" subscriptSizing="dynamic" appearance="outline">
+          <input matInput [matDatepicker]="pickerDue" formControlName="dueDate" placeholder="DD/MM/AAAA" readonly (click)="pickerDue.open()">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerDue"></mat-datepicker-toggle>
+          <mat-datepicker #pickerDue panelClass="n8-datepicker-panel"></mat-datepicker>
+        </mat-form-field>
+        @if (form.controls.dueDate.touched && form.controls.dueDate.invalid) {
+          <span class="field-error">Obrigatório.</span>
+        }
+      </div>
+
+      <!-- Prioridade -->
+      <div class="form-field">
+        <label class="n8-label">Prioridade *</label>
+        <mat-form-field class="elite-mat-field" subscriptSizing="dynamic" appearance="outline">
+          <mat-select formControlName="priority" panelClass="n8-select-panel">
+            <mat-option value="LOW">Baixa</mat-option>
+            <mat-option value="MEDIUM">Média</mat-option>
+            <mat-option value="HIGH">Alta</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Cliente Vinculado -->
+    <div class="form-field">
+      <label class="n8-label">Cliente Vinculado (Opcional)</label>
+      <mat-form-field class="elite-mat-field" subscriptSizing="dynamic" appearance="outline">
+        <mat-select formControlName="clientId" placeholder="Selecione um cliente" panelClass="n8-select-panel">
+          <mat-option value="">Nenhum cliente vinculado</mat-option>
+          @for (client of clients(); track client.id) {
+            <mat-option [value]="client.id">
+              <span class="font-bold">{{ client.name }}</span>
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Descrição -->
+    <div class="form-field">
+      <label class="n8-label">Descrição / Detalhes (Opcional)</label>
+      <textarea class="elite-textarea" formControlName="description" rows="3" placeholder="Anotações importantes sobre a tarefa..."></textarea>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="saas-dialog__actions">
+      <button type="button" class="btn-ghost" (click)="close()">Cancelar</button>
+      <button type="submit" class="n8-btn n8-btn--primary" [disabled]="saving()">
+        @if (saving()) {
+          <lucide-icon name="loader-2" [size]="16" class="n8-loading-spin"></lucide-icon>
+          <span>Salvando...</span>
+        } @else {
+          <lucide-icon name="save" [size]="16"></lucide-icon>
+          <span>Salvar Tarefa</span>
+        }
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,136 @@
+<div class="saas-dialog">
+  
+  <!-- HEADER ELITE DINÂMICO -->
+  <div class="saas-dialog__header">
+    <div class="title-group">
+      <!-- O ícone muda de cor (verde ou vermelho) dependendo do tipo -->
+      <div class="icon-wrapper n8-mr-3" 
+           [ngClass]="data.type === 'INCOME' ? 'bg-success-subtle' : 'bg-danger-subtle'">
+        <lucide-icon 
+          [name]="data.type === 'INCOME' ? 'arrow-up-circle' : 'arrow-down-circle'" 
+          [size]="24" 
+          [ngClass]="data.type === 'INCOME' ? 'text-success' : 'text-danger'">
+        </lucide-icon>
+      </div>
+      <div>
+        <h2 class="n8-heading-md">{{ data.type === 'INCOME' ? 'Registrar Receita' : 'Registrar Despesa' }}</h2>
+        <p class="n8-caption text-muted">Preencha os dados da movimentação financeira.</p>
+      </div>
+    </div>
+    <button class="btn-icon-ghost" type="button" (click)="close()">
+      <lucide-icon name="x" [size]="20"></lucide-icon>
+    </button>
+  </div>
+
+  <!-- BODY DO MODAL -->
+  <form [formGroup]="form" (ngSubmit)="submit()" class="saas-dialog__body">
+    
+    <div class="form-row">
+      <!-- Descrição -->
+      <div class="form-field" style="flex: 2;">
+        <label class="n8-label">Descrição *</label>
+        <input type="text" class="elite-input" formControlName="description" placeholder="Ex: Mensalidade, Internet, Material..." />
+        @if (form.controls.description.touched && form.controls.description.invalid) {
+          <span class="field-error">Obrigatório (mín. 3 caracteres).</span>
+        }
+      </div>
+
+      <!-- Valor Total (Com Máscara R$ Padrão BR) -->
+      <div class="form-field" style="flex: 1;">
+        <label class="n8-label">Valor Total *</label>
+        <input 
+          type="text" 
+          class="elite-input" 
+          formControlName="totalValue" 
+          placeholder="R$ 0,00"
+          mask="separator.2" 
+          prefix="R$ " 
+          thousandSeparator="." 
+          decimalMarker="," 
+        />
+        @if (form.controls.totalValue.touched && form.controls.totalValue.invalid) {
+          <span class="field-error">Obrigatório.</span>
+        }
+      </div>
+    </div>
+
+    <!-- Cliente / Fornecedor -->
+    <div class="form-field">
+      <label class="n8-label">Cliente (Opcional)</label>
+      <mat-form-field class="elite-mat-field" subscriptSizing="dynamic" appearance="outline">
+        <mat-select formControlName="clientId" placeholder="Selecione um contato" panelClass="n8-select-panel">
+          <mat-option value="">Nenhum (Avulso)</mat-option>
+          @for (client of clients(); track client.id) {
+            <mat-option [value]="client.id">
+              <span class="font-bold">{{ client.name }}</span>
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <hr class="n8-divider" />
+
+    <div class="form-row">
+      <!-- Método de Pagamento -->
+    <div class="form-field">
+        <label class="n8-label">Condição de Pagamento *</label>
+        <mat-form-field class="elite-mat-field" subscriptSizing="dynamic" appearance="outline">
+          <mat-select formControlName="paymentMethod" panelClass="n8-select-panel">
+            <mat-option value="CASH">À vista / Parcela Única</mat-option>
+            <mat-option value="INSTALLMENT">Parcelado</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <!-- Parcelas -->
+   @if (form.get('paymentMethod')?.value === 'INSTALLMENT') {
+        <div class="form-field">
+          <label class="n8-label">Qtd. de Parcelas *</label>
+          <input type="number" class="elite-input" formControlName="installmentsQty" min="2" placeholder="Ex: 3" />
+        </div>
+      }
+    </div>
+
+    <div class="form-row">
+      <!-- Vencimento (O Label muda dinamicamente!) -->
+      <div class="form-field">
+        <label class="n8-label">
+          {{ form.get('paymentMethod')?.value === 'INSTALLMENT' ? 'Vencimento da 1ª Parcela *' : 'Data de Vencimento *' }}
+        </label>
+        <mat-form-field class="elite-mat-field date-filter" subscriptSizing="dynamic" appearance="outline">
+          <input matInput [matDatepicker]="pickerFirstDue" formControlName="firstDueDate" placeholder="DD/MM/AAAA" readonly (click)="pickerFirstDue.open()">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerFirstDue"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFirstDue panelClass="n8-datepicker-panel"></mat-datepicker>
+        </mat-form-field>
+        @if (form.controls.firstDueDate.touched && form.controls.firstDueDate.invalid) {
+          <span class="field-error">Obrigatório.</span>
+        }
+      </div>
+      
+      <!-- Intervalo de Dias (APARECE APENAS SE FOR PARCELADO) -->
+      @if (form.get('paymentMethod')?.value === 'INSTALLMENT') {
+        <div class="form-field">
+          <label class="n8-label">Intervalo (Dias) *</label>
+          <input type="number" class="elite-input" formControlName="intervalDays" min="1" placeholder="Ex: 30" title="Dias entre o vencimento de cada parcela" />
+        </div>
+      }
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="saas-dialog__actions">
+      <button type="button" class="btn-ghost" (click)="close()">Cancelar</button>
+      
+      <!-- O botão muda a cor conforme a ação -->
+      <button type="submit" class="n8-btn" [disabled]="saving()" [ngClass]="data.type === 'INCOME' ? 'n8-btn--success' : 'n8-btn--danger'">
+        @if (saving()) {
+          <lucide-icon name="loader-2" [size]="16" class="n8-loading-spin"></lucide-icon>
+          <span>Processando...</span>
+        } @else {
+          <lucide-icon name="check" [size]="16"></lucide-icon>
+          <span>Registrar {{ data.type === 'INCOME' ? 'Receita' : 'Despesa' }}</span>
+        }
+      </button>
+    </div>
+  </form>
+</div>

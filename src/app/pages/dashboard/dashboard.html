@@ -1,0 +1,180 @@
+<!-- HEADER COM FILTROS -->
+<div class="dash-header">
+  <div class="dash-header__title">
+    <h1>Visão Geral</h1>
+    <p>Acompanhe a saúde financeira e operacional do negócio.</p>
+  </div>
+
+  <div class="dash-header__actions" [formGroup]="filterForm">
+    <!-- Filtro de Período (Material Select) -->
+    <mat-form-field class="n8-mat-select-filter" subscriptSizing="dynamic" appearance="outline">
+      <mat-select formControlName="period" panelClass="n8-select-panel">
+        <mat-option value="today">Hoje</mat-option>
+        <mat-option value="this_week">Esta Semana</mat-option>
+        <mat-option value="this_month">Este Mês</mat-option>
+        <mat-option value="last_month">Mês Passado</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Filtro de Data Customizada (Material Datepicker) -->
+    <mat-form-field class="n8-mat-select-filter date-filter" subscriptSizing="dynamic" appearance="outline">
+      <input matInput [matDatepicker]="pickerDate" formControlName="customDate" placeholder="Até a data..." readonly (click)="pickerDate.open()">
+      <mat-datepicker-toggle matIconSuffix [for]="pickerDate"></mat-datepicker-toggle>
+      <mat-datepicker #pickerDate panelClass="n8-datepicker-panel"></mat-datepicker>
+    </mat-form-field>
+
+    <!-- Botão de Atualizar -->
+    <button class="btn-refresh" (click)="loadData()" [disabled]="loading()" title="Atualizar Dashboard">
+      <lucide-icon name="refresh-cw" [size]="18" [class.n8-loading-spin]="loading()"></lucide-icon>
+    </button>
+  </div>
+</div>
+
+@if (loading() && !summary()) {
+  <div class="loading-state">
+    <lucide-icon name="loader-2" [size]="32" class="n8-loading-spin text-primary"></lucide-icon>
+    <p>Compilando dados financeiros...</p>
+  </div>
+} @else if (summary(); as data) {
+  
+  <!-- LINHA 1: DESTAQUES FINANCEIROS -->
+  <div class="top-cards-grid">
+    
+    <!-- Card Receita -->
+    <div class="saas-card">
+      <div class="saas-card__header">
+        <span class="label">Receita do Mês</span>
+        <div class="icon-wrapper bg-success">
+          <lucide-icon name="arrow-up-right" [size]="20"></lucide-icon>
+        </div>
+      </div>
+      <div class="saas-card__body">
+        <h2 class="value">{{ data.monthIncome | currency:'BRL' }}</h2>
+        <div class="trend badge-success">
+          <lucide-icon name="trending-up" [size]="14"></lucide-icon>
+          <span>Em dia</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Despesa -->
+    <div class="saas-card">
+      <div class="saas-card__header">
+        <span class="label">Despesas do Mês</span>
+        <div class="icon-wrapper bg-danger">
+          <lucide-icon name="arrow-down-right" [size]="20"></lucide-icon>
+        </div>
+      </div>
+      <div class="saas-card__body">
+        <h2 class="value">{{ data.monthExpense | currency:'BRL' }}</h2>
+        <div class="trend badge-neutral">
+          <lucide-icon name="minus" [size]="14"></lucide-icon>
+          <span>Previsto</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Saldo (Destaque Dark) -->
+    <div class="saas-card saas-card--dark">
+      <div class="saas-card__header">
+        <span class="label">Saldo em Caixa</span>
+        <div class="icon-wrapper bg-dark-glass">
+          <lucide-icon name="wallet" [size]="20"></lucide-icon>
+        </div>
+      </div>
+      <div class="saas-card__body">
+        <h2 class="value">{{ data.monthBalance | currency:'BRL' }}</h2>
+        <div class="trend text-light-glass">
+          <span>Livre para uso</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LINHA 2: DIVISÃO DE OPERAÇÃO E CRESCIMENTO -->
+  <div class="split-grid">
+    
+    <!-- COLUNA ESQUERDA: RISCOS E PENDÊNCIAS -->
+    <div class="split-column">
+      <h3 class="section-title">Riscos e Pendências</h3>
+      
+      <!-- Inadimplência -->
+      <div class="saas-card mb-4">
+        <div class="saas-card__header">
+          <span class="label">Inadimplência (Atrasados)</span>
+          <div class="icon-wrapper bg-danger">
+            <lucide-icon name="alert-triangle" [size]="20"></lucide-icon>
+          </div>
+        </div>
+        <div class="saas-card__body flex-between">
+          <div>
+            <h2 class="value text-danger">{{ data.totalOverdueAmount | currency:'BRL' }}</h2>
+            <p class="sub-label">De <strong>{{ data.overdueClientsCount }}</strong> clientes</p>
+          </div>
+          <button class="btn-action btn-danger-light" routerLink="/relatorios">Cobrar Agora</button>
+        </div>
+      </div>
+
+      <!-- Agenda -->
+      <div class="saas-card" routerLink="/agenda" style="cursor: pointer;">
+        <div class="saas-card__header">
+          <span class="label">Tarefas de Hoje</span>
+          <div class="icon-wrapper bg-warning">
+            <lucide-icon name="calendar-clock" [size]="20"></lucide-icon>
+          </div>
+        </div>
+        <div class="saas-card__body flex-between">
+          <div>
+            <div class="value-row">
+              <h2 class="value">{{ data.tasksToday }}</h2>
+              <span class="value-suffix">pendentes</span>
+            </div>
+            @if (data.tasksOverdue > 0) {
+              <p class="sub-label text-danger font-bold">{{ data.tasksOverdue }} tarefa(s) atrasada(s)!</p>
+            } @else {
+              <p class="sub-label text-success">Sua agenda está em dia.</p>
+            }
+          </div>
+          <lucide-icon name="chevron-right" class="text-muted"></lucide-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUNA DIREITA: PIPELINE E CRESCIMENTO -->
+    <div class="split-column">
+      <h3 class="section-title">Pipeline e Crescimento</h3>
+
+      <div class="mini-grid mb-4">
+        <!-- A receber -->
+        <div class="saas-card">
+          <div class="saas-card__header">
+            <span class="label">A Receber (No prazo)</span>
+            <lucide-icon name="clock" [size]="18" class="text-info"></lucide-icon>
+          </div>
+          <div class="saas-card__body">
+            <h2 class="value-md text-info">{{ data.totalOpenReceivables | currency:'BRL' }}</h2>
+          </div>
+        </div>
+
+        <!-- Novos Clientes -->
+        <div class="saas-card">
+          <div class="saas-card__header">
+            <span class="label">Novos Clientes</span>
+            <lucide-icon name="users" [size]="18" class="text-muted"></lucide-icon>
+          </div>
+          <div class="saas-card__body">
+            <h2 class="value-md">{{ data.newClientsThisMonth }}</h2>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Placeholder de Gráfico Premium -->
+      <!-- <div class="chart-placeholder">
+        <lucide-icon name="bar-chart-3" [size]="32" class="text-muted mb-2"></lucide-icon>
+        <p>Gráfico de Evolução Financeira<br/><span>(Em breve)</span></p>
+      </div> -->
+
+    </div>
+  </div>
+}

@@ -1,0 +1,239 @@
+// ─── CABEÇALHO ──────────────────────────────────────────────────────────
+.elite-page-header {
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+
+    .header-actions {
+      width: 100%;
+      .n8-btn { width: 100%; justify-content: center; }
+    }
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--n8-text-primary);
+    margin-bottom: 0.25rem;
+  }
+  p { margin: 0; }
+}
+
+// ─── LAYOUT DA AGENDA (SPLIT VIEW) ─────────────────────────────────────
+.agenda-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+  align-items: start;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr; // Empilha no tablet/celular
+    gap: 1.5rem;
+  }
+}
+
+// ─── COLUNA ESQUERDA: CALENDÁRIO ELITE ─────────────────────────────────
+.saas-card {
+  background: var(--n8-surface);
+  border-radius: 16px;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05), 0 1px 2px rgba(16, 24, 40, 0.03);
+  overflow: hidden;
+
+  &.p-0 { padding: 0; }
+}
+
+// Ajustes pesados para deixar o calendário do Material Design com visual SaaS Premium
+::ng-deep .elite-calendar {
+  width: 100% !important;
+  
+  .mat-calendar-header { padding: 8px 16px 0; }
+  
+  .mat-calendar-table-header th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--n8-text-muted);
+  }
+
+  .mat-calendar-body-cell-content {
+    font-family: var(--n8-font);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--n8-text-secondary);
+    border-radius: 8px !important; // Círculos perfeitamente redondos ficam velhos, pílulas ou bordas arredondadas são melhores
+  }
+
+  // O dia atual
+  .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+    background-color: var(--n8-surface-2);
+    border-color: var(--n8-border);
+  }
+
+  // O dia selecionado pelo usuário
+  .mat-calendar-body-selected {
+    background-color: var(--n8-primary) !important;
+    color: #0A2E8C !important;
+    box-shadow: 0 2px 4px rgba(10, 46, 140, 0.2);
+  }
+}
+
+
+// ─── COLUNA DIREITA: LISTA DE TAREFAS ─────────────────────────────────
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.task-card {
+  display: flex;
+  background: var(--n8-surface);
+  border-radius: 12px;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  transition: all 0.2s ease;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 4px 6px -1px rgba(16, 24, 40, 0.05);
+    transform: translateY(-1px);
+  }
+
+  &__indicator {
+    width: 6px;
+    background: transparent;
+    flex-shrink: 0;
+
+    &.indicator--danger { background: var(--n8-danger); }
+    &.indicator--success { background: var(--n8-success); }
+  }
+
+  &__content {
+    padding: 1.25rem;
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .task-details {
+    flex: 1;
+    min-width: 0; // Evita overflow de texto
+  }
+
+  .task-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--n8-text-primary);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .task-desc {
+    font-size: 0.85rem;
+    color: var(--n8-text-secondary);
+    margin: 0.25rem 0 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .task-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--n8-text-muted);
+  }
+
+  // Estilo para tarefas concluídas (DONE)
+  &--done {
+    background: var(--n8-surface-2);
+    border-color: var(--n8-border);
+    box-shadow: none;
+    opacity: 0.8;
+
+    .task-desc, .task-meta { color: var(--n8-text-muted) !important; }
+    &:hover { transform: none; box-shadow: none; }
+  }
+
+  .text-strike {
+    text-decoration: line-through;
+    color: var(--n8-text-muted);
+  }
+}
+
+// ─── BOTÕES E CHECKBOXES ──────────────────────────────────────────────
+.task-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--n8-text-muted);
+  padding: 0;
+  margin-top: 2px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover { color: var(--n8-success); }
+  &.checked { color: var(--n8-success); }
+}
+
+.btn-icon-ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--n8-text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--n8-surface-2);
+    color: var(--n8-text-primary);
+  }
+}
+
+// ─── UTILITÁRIOS GERAIS ───────────────────────────────────────────────
+.elite-state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  text-align: center;
+
+  &.empty-state {
+    .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--n8-surface-2);
+      color: var(--n8-text-muted);
+    }
+  }
+}
+
+
+
+.badge-danger { background: #FEF2F2; color: #DC2626; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; display: inline-block; }
+.badge-warning { background: #FFFBEB; color: #D97706; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; display: inline-block; }
+.badge-neutral { background: var(--n8-surface-2); color: var(--n8-text-secondary); padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; display: inline-block; }
+
+.text-danger { color: #DC2626 !important; }
+.text-success { color: #059669 !important; }
+.text-primary { color: var(--n8-primary) !important; }
+.text-muted { color: var(--n8-text-muted) !important; }
+.font-medium { font-weight: 500; }
+.font-bold { font-weight: 700; }

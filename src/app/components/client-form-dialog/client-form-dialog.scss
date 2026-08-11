@@ -1,0 +1,61 @@
+.n8-form-dialog {
+  background: var(--n8-surface);
+  border-radius: var(--n8-radius-lg);
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--n8-space-5) var(--n8-space-6);
+    border-bottom: 1px solid var(--n8-border);
+  }
+
+  &__body {
+    padding: var(--n8-space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--n8-space-4);
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--n8-space-3);
+    margin-top: var(--n8-space-2);
+
+    .n8-btn { min-width: 140px; }
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--n8-space-2);
+  flex: 1;
+
+  .field-error {
+    font-size: 0.8rem;
+    color: var(--n8-danger);
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: var(--n8-space-4);
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .n8-form-dialog__body { padding: var(--n8-space-4); }
+
+  .n8-form-dialog__actions {
+    flex-direction: column-reverse;
+    .n8-btn { width: 100%; }
+  }
+}

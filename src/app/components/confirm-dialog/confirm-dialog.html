@@ -1,0 +1,20 @@
+<div class="n8-confirm-dialog">
+  
+  <div class="n8-confirm-dialog__icon" [ngClass]="data.isDanger ? 'is-danger' : 'is-info'">
+    <lucide-icon [name]="data.isDanger ? 'alert-triangle' : 'help-circle'"></lucide-icon>
+  </div>
+  
+  <h2 class="n8-confirm-dialog__title">{{ data.title }}</h2>
+  <p class="n8-confirm-dialog__text" [innerHTML]="data.message"></p>
+
+  <div class="n8-confirm-dialog__actions">
+    <button (click)="onCancel()" class="n8-btn n8-btn--secondary">
+      {{ data.cancelText || 'Cancelar' }}
+    </button>
+    
+    <button (click)="onConfirm()" class="n8-btn n8-btn--primary" [class.n8-btn--danger]="data.isDanger">
+      <lucide-icon [name]="data.isDanger ? 'trash-2' : 'check'" style="width: 18px; height: 18px;"></lucide-icon>
+      {{ data.confirmText || 'Confirmar' }}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,823 @@
+// ============================================================
+// NOVE8 ESTÉTICA AUTOMOTIVA — DESIGN SYSTEM v2.0
+// Perfil: Serviço Express Premium / Light Theme
+// ============================================================
+
+// ─── IMPORTAÇÃO DE FONTE ────────────────────────────────────
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+// ─── TOKENS DE MARCA ────────────────────────────────────────
+:root {
+  // — IDENTIDADE —
+  --n8-blue: #0A2E8C; // Azul royal (logo)
+  --n8-blue-hover: #1A4BCC; // Hover / botão ativo
+  --n8-blue-dark: #051A54; // Contraste máximo
+  --n8-blue-subtle: #EEF3FF; // Fundo de badges e highlights
+
+  // — SUPERFÍCIES —
+  --n8-bg: #F0F2F7; // Fundo da tela
+  --n8-surface: #FFFFFF; // Cards, painéis
+  --n8-surface-2: #F7F8FC; // Inputs, hovers
+
+  // — TIPOGRAFIA —
+  --n8-text-primary: #111827;
+  --n8-text-secondary: #4B5563;
+  --n8-text-muted: #9CA3AF;
+  --n8-text-on-blue: #FFFFFF;
+
+  // — STATUS SEMÂNTICO —
+  --n8-success: #059669;
+  --n8-success-bg: #ECFDF5;
+  --n8-success-border: #6EE7B7;
+
+  --n8-warning: #D97706;
+  --n8-warning-bg: #FFFBEB;
+  --n8-warning-border: #FCD34D;
+
+  --n8-danger: #DC2626;
+  --n8-danger-bg: #FEF2F2;
+  --n8-danger-border: #FCA5A5;
+
+  --n8-info: #0369A1;
+  --n8-info-bg: #E0F2FE;
+  --n8-info-border: #7DD3FC;
+
+  // — ESTRUTURA E SOMBRAS —
+  --n8-border: #E5E7EB;
+  --n8-border-focus: #0A2E8C;
+  --n8-divider: #F3F4F6;
+
+  --n8-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --n8-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --n8-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --n8-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+
+  // — RAIOS E FONTES —
+  --n8-radius-sm: 6px;
+  --n8-radius-md: 10px;
+  --n8-radius-lg: 14px;
+  --n8-radius-xl: 20px;
+  --n8-font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  // — ESPAÇAMENTO —
+  --n8-space-1: 4px;
+  --n8-space-2: 8px;
+  --n8-space-3: 12px;
+  --n8-space-4: 16px;
+  --n8-space-5: 20px;
+  --n8-space-6: 24px;
+  --n8-space-8: 32px;
+  --n8-space-10: 40px;
+  --n8-space-12: 48px;
+
+  --n8-transition: 150ms ease;
+  --n8-transition-md: 200ms ease;
+}
+
+// ─── RESET + BASE ────────────────────────────────────────────
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background-color: var(--n8-bg);
+  color: var(--n8-text-primary);
+  font-family: var(--n8-font);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+// ─── TIPOGRAFIA ──────────────────────────────────────────────
+.n8-heading-xl {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--n8-text-primary);
+}
+
+.n8-heading-lg {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--n8-text-primary);
+}
+
+.n8-heading-md {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--n8-text-primary);
+}
+
+.n8-heading-sm {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--n8-text-primary);
+}
+
+.n8-body {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--n8-text-secondary);
+}
+
+.n8-caption {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--n8-text-muted);
+}
+
+.n8-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--n8-text-muted);
+}
+
+.n8-metric {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--n8-text-primary);
+}
+
+// ─── COMPONENTES GENÉRICOS ───────────────────────────────────
+.n8-card {
+  background: var(--n8-surface);
+  border-radius: var(--n8-radius-lg);
+  border: 1px solid var(--n8-border);
+  box-shadow: var(--n8-shadow-sm);
+  padding: var(--n8-space-6);
+  transition: box-shadow var(--n8-transition-md);
+
+  &:hover {
+    box-shadow: var(--n8-shadow-md);
+  }
+
+  &--info {
+    border-left: 3px solid var(--n8-info);
+  }
+
+  &--success {
+    border-left: 3px solid var(--n8-success);
+  }
+
+  &--warning {
+    border-left: 3px solid var(--n8-warning);
+  }
+
+  &--danger {
+    border-left: 3px solid var(--n8-danger);
+  }
+
+  &--brand {
+    border-left: 3px solid var(--n8-blue);
+  }
+}
+
+.n8-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--n8-space-2);
+  font-family: var(--n8-font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--n8-radius-md);
+  padding: 10px 18px;
+  min-height: 44px;
+  transition: all var(--n8-transition);
+  white-space: nowrap;
+
+  &:focus-visible {
+    outline: 2px solid var(--n8-blue);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &--primary {
+    background: var(--n8-blue);
+    color: var(--n8-text-on-blue);
+
+    &:hover:not(:disabled) {
+      background: var(--n8-blue-hover);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+  }
+
+  &--secondary {
+    background: transparent;
+    color: var(--n8-text-secondary);
+    border: 1px solid var(--n8-border);
+
+    &:hover:not(:disabled) {
+      background: var(--n8-surface-2);
+      border-color: #C9CDD6;
+      color: var(--n8-text-primary);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--n8-blue);
+    padding-left: var(--n8-space-2);
+    padding-right: var(--n8-space-2);
+
+    &:hover:not(:disabled) {
+      background: var(--n8-blue-subtle);
+    }
+  }
+
+  &--icon {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--n8-text-muted);
+    border: 1px solid transparent;
+
+    &:hover {
+      background: var(--n8-surface-2);
+      color: var(--n8-text-primary);
+      border-color: var(--n8-border);
+    }
+  }
+
+  &--loading {
+    pointer-events: none;
+
+    .n8-btn__spinner {
+      animation: n8-spin 0.8s linear infinite;
+    }
+  }
+}
+
+.n8-input,
+.n8-select {
+  width: 100%;
+  font-family: var(--n8-font);
+  font-size: 0.9375rem;
+  color: var(--n8-text-primary);
+  background: var(--n8-surface-2);
+  border: 1.5px solid var(--n8-border);
+  border-radius: var(--n8-radius-md);
+  padding: 11px 14px;
+  min-height: 44px;
+  transition: border-color var(--n8-transition), box-shadow var(--n8-transition);
+  outline: none;
+
+  &::placeholder {
+    color: var(--n8-text-muted);
+  }
+
+  &:hover:not(:focus) {
+    border-color: #C9CDD6;
+  }
+
+  &:focus {
+    border-color: var(--n8-blue);
+    box-shadow: 0 0 0 3px rgba(10, 46, 140, 0.1);
+    background: var(--n8-surface);
+  }
+}
+
+.n8-select {
+  appearance: none;
+  padding-right: 36px;
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" fill="%239CA3AF"><path d="M1 1l5 5 5-5" stroke="%239CA3AF" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.n8-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+
+  &--success {
+    background: var(--n8-success-bg);
+    color: var(--n8-success);
+  }
+
+  &--warning {
+    background: var(--n8-warning-bg);
+    color: var(--n8-warning);
+  }
+
+  &--danger {
+    background: var(--n8-danger-bg);
+    color: var(--n8-danger);
+  }
+
+  &--info {
+    background: var(--n8-info-bg);
+    color: var(--n8-info);
+  }
+
+  &--neutral {
+    background: var(--n8-surface-2);
+    color: var(--n8-text-secondary);
+    border: 1px solid var(--n8-border);
+  }
+}
+
+.n8-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead tr {
+    border-bottom: 1.5px solid var(--n8-border);
+
+    th {
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--n8-text-muted);
+      text-align: left;
+      white-space: nowrap;
+    }
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--n8-divider);
+    transition: background var(--n8-transition);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: var(--n8-surface-2);
+    }
+
+    td {
+      padding: 14px 12px;
+      font-size: 0.9rem;
+      color: var(--n8-text-secondary);
+      vertical-align: middle;
+    }
+
+    td.n8-td--primary {
+      font-weight: 600;
+      color: var(--n8-text-primary);
+    }
+
+    td.n8-td--value {
+      font-weight: 700;
+      color: var(--n8-blue);
+    }
+  }
+}
+
+.n8-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// ─── MATERIAIS OVERRIDES E UTILITÁRIOS ───────────────────────
+.mat-mdc-card,
+.mat-mdc-dialog-surface {
+  background-color: var(--n8-surface) !important;
+  border-radius: var(--n8-radius-lg) !important;
+  border: 1px solid var(--n8-border) !important;
+}
+
+.mat-mdc-text-field-wrapper {
+  background-color: var(--n8-surface-2) !important;
+}
+
+.n8-flex {
+  display: flex;
+}
+
+.n8-flex-col {
+  flex-direction: column;
+}
+
+.n8-align-center {
+  align-items: center;
+}
+
+.n8-justify-center {
+  justify-content: center;
+}
+
+.n8-justify-between {
+  justify-content: space-between;
+}
+
+.n8-flex-1 {
+  flex: 1;
+  min-width: 0;
+}
+
+.n8-w-full {
+  width: 100%;
+}
+
+.n8-h-full {
+  height: 100%;
+}
+
+.n8-gap-1 {
+  gap: var(--n8-space-1);
+}
+
+.n8-gap-2 {
+  gap: var(--n8-space-2);
+}
+
+.n8-gap-3 {
+  gap: var(--n8-space-3);
+}
+
+.n8-gap-4 {
+  gap: var(--n8-space-4);
+}
+
+.n8-gap-6 {
+  gap: var(--n8-space-6);
+}
+
+.n8-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.n8-loading-spin {
+  animation: n8-spin 0.8s linear infinite;
+}
+
+@keyframes n8-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+// ─── TOASTS / SNACKBARS (Notificações Flutuantes) ────────────
+.n8-snackbar-success {
+  .mdc-snackbar__surface {
+    background-color: var(--n8-success-bg) !important;
+    border: 1px solid var(--n8-success-border) !important;
+    border-radius: var(--n8-radius-md) !important;
+    box-shadow: var(--n8-shadow-md) !important;
+  }
+
+  .mdc-snackbar__label {
+    color: var(--n8-success) !important;
+    font-family: var(--n8-font) !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-mdc-button .mdc-button__label {
+    color: var(--n8-success) !important;
+    font-weight: 800 !important;
+  }
+}
+
+.n8-snackbar-error {
+  .mdc-snackbar__surface {
+    background-color: var(--n8-danger-bg) !important;
+    border: 1px solid var(--n8-danger-border) !important;
+    border-radius: var(--n8-radius-md) !important;
+    box-shadow: var(--n8-shadow-md) !important;
+  }
+
+  .mdc-snackbar__label {
+    color: var(--n8-danger) !important;
+    font-family: var(--n8-font) !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-mdc-button .mdc-button__label {
+    color: var(--n8-danger) !important;
+    font-weight: 800 !important;
+  }
+}
+
+// ==========================================================================
+// COMPONENTES COMPARTILHADOS (SELECTS, DROPDOWNS, MASCARAS)
+// ==========================================================================
+
+// ─── SELECT NO ESTILO PÍLULA (USADO COM BOTÕES) ──────────────────────────
+.n8-export-group {
+  display: flex;
+  border: 1px solid var(--n8-border);
+  border-radius: var(--n8-radius-md);
+  background: var(--n8-surface);
+  transition: border-color var(--n8-transition);
+  align-items: stretch;
+
+  &:hover {
+    border-color: var(--n8-blue);
+  }
+
+  // Remove a "cara" de input do Angular Material
+  .n8-mat-select-borderless {
+    width: 160px;
+    border-right: 1px solid var(--n8-border);
+
+    .mat-mdc-text-field-wrapper {
+      background-color: transparent !important;
+      padding: 0 14px;
+    }
+
+    .mdc-line-ripple,
+    .mat-mdc-form-field-focus-overlay {
+      display: none !important;
+    }
+
+    .mat-mdc-form-field-flex {
+      height: 40px;
+      align-items: center;
+    }
+
+    .mat-mdc-form-field-infix {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      min-height: 40px;
+    }
+
+    .mat-mdc-select-value-text {
+      font-family: var(--n8-font);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--n8-text-secondary);
+    }
+
+    .mat-mdc-select-arrow {
+      color: var(--n8-text-muted);
+    }
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: var(--n8-space-2);
+    background: transparent;
+    border: none;
+    color: var(--n8-text-secondary);
+    padding: 0 var(--n8-space-4);
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: var(--n8-font);
+    cursor: pointer;
+    transition: all var(--n8-transition);
+
+    &:hover {
+      color: var(--n8-text-primary);
+      background: var(--n8-surface-2);
+    }
+  }
+}
+
+// ─── SELECT DE FILTROS/FORMULÁRIOS (ALTURA 44px) ─────────────────────────
+.n8-mat-select-filter {
+  width: 100%; // Ajustado para preencher forms por padrão
+
+  .mat-mdc-text-field-wrapper {
+    padding: 0 14px;
+    background-color: var(--n8-surface-2) !important;
+  }
+
+  .mat-mdc-form-field-flex {
+    height: 44px;
+    align-items: center;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-width: 1.5px !important;
+    border-color: var(--n8-border) !important;
+  }
+
+  .mdc-notched-outline__leading {
+    border-radius: var(--n8-radius-md) 0 0 var(--n8-radius-md) !important;
+    width: 12px !important;
+  }
+
+  .mdc-notched-outline__trailing {
+    border-radius: 0 var(--n8-radius-md) var(--n8-radius-md) 0 !important;
+  }
+
+  &:hover .mdc-notched-outline__leading,
+  &:hover .mdc-notched-outline__notch,
+  &:hover .mdc-notched-outline__trailing {
+    border-color: var(--n8-border-focus) !important;
+  }
+
+  .mat-mdc-select-value-text {
+    font-family: var(--n8-font);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--n8-text-secondary);
+  }
+
+  .mat-mdc-select-arrow {
+    color: var(--n8-text-muted);
+  }
+}
+
+// ─── ESTILO DO MENU FLUTUANTE (DROPDOWN) ──────────────────────────────────
+// Como painéis flutuantes (Overlays) são injetados direto no <body> pelo Angular,
+// esta classe PRECISA ficar no styles.scss global.
+.n8-select-panel {
+  background-color: var(--n8-surface) !important;
+  border-radius: var(--n8-radius-md) !important;
+  border: 1px solid var(--n8-border) !important;
+  box-shadow: var(--n8-shadow-lg) !important;
+  padding: 6px !important;
+  margin-top: 6px !important;
+
+  .mat-mdc-option {
+    min-height: 44px !important;
+    border-radius: 6px !important;
+    color: var(--n8-text-secondary) !important;
+    font-family: var(--n8-font) !important;
+    font-size: 0.875rem !important;
+    margin-bottom: 2px;
+
+    &:hover:not(.mdc-list-item--disabled) {
+      background-color: var(--n8-surface-2) !important;
+      color: var(--n8-text-primary) !important;
+    }
+
+    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+      background-color: var(--n8-blue-subtle) !important;
+      color: var(--n8-blue) !important;
+      font-weight: 600 !important;
+    }
+  }
+}
+
+
+// ─── CAIXA DE BUSCA DENTRO DO SELECT ──────────────────────────────────────
+.n8-select-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 4px 6px 8px 6px;
+  background: var(--n8-surface-2);
+  border-radius: var(--n8-radius-sm);
+  border: 1px solid var(--n8-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  .n8-select-search-input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    font-family: var(--n8-font);
+    font-size: 0.875rem;
+    color: var(--n8-text-primary);
+
+    &::placeholder {
+      color: var(--n8-text-muted);
+    }
+  }
+}
+
+.n8-select-empty-state {
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  color: var(--n8-text-muted);
+  text-align: center;
+}
+
+/// ─── DATEPICKER ANGULAR MATERIAL (Padrão do Sistema — Light) ───
+
+// O background real do calendário fica no PRÓPRIO elemento com panelClass
+.n8-datepicker-panel {
+  background-color: var(--n8-surface) !important;
+  border-radius: var(--n8-radius-lg) !important;
+}
+
+// O wrapper (dialog) e o content também precisam de fundo,
+// já que panelClass não alcança essas camadas acima
+.mat-datepicker-content-container {
+  background-color: var(--n8-surface) !important;
+  border-radius: var(--n8-radius-lg) !important;
+}
+
+.mat-datepicker-content {
+  background-color: var(--n8-surface) !important;
+  border: 1px solid var(--n8-border) !important;
+  border-radius: var(--n8-radius-lg) !important;
+  box-shadow: var(--n8-shadow-lg) !important;
+  overflow: hidden;
+
+  .mat-calendar-table-header th,
+  .mat-calendar-body-label,
+  .mat-calendar-body-cell-content,
+  .mat-calendar-period-button,
+  .mat-calendar-controls .mat-mdc-button-base {
+    color: var(--n8-text-primary) !important;
+    font-family: var(--n8-font) !important;
+  }
+
+  .mat-calendar-table-header th {
+    color: var(--n8-text-muted) !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-calendar-arrow { fill: var(--n8-text-primary) !important; }
+
+  .mat-calendar-body-cell-content:hover {
+    background: var(--n8-surface-2) !important;
+  }
+
+  .mat-calendar-body-selected {
+    background: var(--n8-blue) !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+  }
+
+  .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+    border-color: var(--n8-blue) !important;
+    color: var(--n8-blue) !important;
+    font-weight: 700 !important;
+  }
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity var(--n8-transition);
+  
+  &:hover {
+    opacity: 1;
+  }
+}

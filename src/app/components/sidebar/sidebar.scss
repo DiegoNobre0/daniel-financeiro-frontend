@@ -1,0 +1,322 @@
+// sidebar.component.scss
+
+$sidebar-width: 260px;
+$sidebar-collapsed: 85px;
+
+:host {
+    display: block;
+    z-index: 100;
+}
+
+.sidebar {
+    height: 100vh;
+    height: 100dvh;
+    background: var(--n8-surface);
+    border-right: 1px solid var(--n8-border);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.3s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 0;
+    }
+
+    // ----------------------------------------------------
+    // 💻 COMPORTAMENTO DESKTOP (Fixa na tela)
+    // ----------------------------------------------------
+    @media (min-width: 992px) {
+        position: relative;
+        transform: translateX(0) !important;
+        width: $sidebar-width;
+
+       &.collapsed {
+            width: $sidebar-collapsed; // 85px
+
+            .brand {
+                padding: 1.5rem 0;
+                justify-content: center;
+
+                .brand-full { display: none !important; }
+                .brand-icon { 
+                    display: block !important; 
+                    width: 10rem; 
+                    height: auto; 
+                }
+            }
+
+            .section-title {
+                display: none;
+            }
+
+            // ─── O SEGREDO DO QUADRADO PERFEITO AQUI ───
+            .menu-item {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 5rem;
+                height: 48px;        // 📐 Força a altura idêntica à largura
+                padding: 0;          // 🧼 Reseta o padding para o flexbox centralizar perfeitamente
+                margin: 0.5rem auto; // Centraliza o bloco na horizontal da sidebar
+                border-radius: 12px; // Arredondado premium igual ao exemplo
+
+                .sidebar-icon {
+                    margin: 0;       // Remove qualquer margem herdada
+                    width: 22px;     // Tamanho ideal para destacar o ícone lá dentro
+                    height: 22px;
+                }
+
+                .label { 
+                    display: none; 
+                }
+            }
+
+            .sidebar-footer {
+                padding: 1.5rem 0;
+                justify-content: center;
+
+                .user-info, .btn-logout { display: none; }
+                .user-badge { margin: 0 auto; }
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // 📱 COMPORTAMENTO MOBILE (Esconde/Desliza)
+    // ----------------------------------------------------
+    @media (max-width: 991px) {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        transform: translateX(-100%);
+        box-shadow: none;
+
+        &.mobile-open {
+            transform: translateX(0);
+            box-shadow: 20px 0 30px rgba(0, 0, 0, 0.2);
+        }
+
+        &.collapsed {
+            width: 280px;
+        }
+    }
+
+
+    // ----------------------------------------------------
+    // MARCA (LOGO)
+    // ----------------------------------------------------
+    .brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 110px;
+        transition: all 0.3s ease;
+
+        .brand-full {
+            width: 10rem;
+            height: auto;
+            object-fit: contain;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: auto;
+            max-height: 42px;
+            object-fit: contain;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .menu-section {
+        padding: 1rem 0;
+
+        .section-title {
+            padding: 0 2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--n8-text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+    }
+
+   .nav-group {
+        display: flex;
+        flex-direction: column;
+        padding: 0 1rem;
+
+        .menu-item {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 8px;
+            color: var(--n8-text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+
+            .sidebar-icon {
+                width: 20px;
+                height: 20px;
+                stroke-width: 2px;
+                flex-shrink: 0;
+                color: var(--n8-text-muted);
+                transition: color 0.3s ease;
+            }
+
+            .label {
+                margin-left: 12px;
+                white-space: nowrap;
+                font-size: 0.95rem;
+                font-weight: 500;
+            }
+
+            // ─── HOVER (Passar o mouse) ───
+            &:hover:not(.active) {
+                background: var(--n8-surface-2); // Fundo cinza bem sutil
+                color: var(--n8-text-primary);   // Texto quase preto
+
+                .sidebar-icon { 
+                    color: var(--n8-blue);       // Ícone ganha o azul de destaque
+                }
+            }
+
+            // ─── SELECIONADO (Active) ───
+            &.active {
+                background: var(--n8-blue);        // 🔵 Fundo Azul Forte Royal
+                color: var(--n8-text-on-blue);     // ⚪ Letras Brancas
+                font-weight: 600;
+
+                .sidebar-icon { 
+                    color: var(--n8-text-on-blue); // ⚪ Ícone branco para dar contraste total!
+                }
+            }
+        }
+    }
+
+    .spacer {
+        flex: 1;
+    }
+
+    .sidebar-footer {
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: auto;
+
+        .btn-logout {
+            margin-left: auto;
+            background: transparent;
+            border: none;
+            color: var(--n8-text-muted);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: var(--n8-danger-bg);
+                color: var(--n8-danger);
+                transform: translateX(2px);
+            }
+        }
+
+        .user-badge {
+            min-width: 40px;
+            height: 40px;
+            background: var(--n8-blue-subtle);
+            color: var(--n8-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+
+            .user-name {
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: var(--n8-text-primary);
+            }
+
+            .user-role {
+                font-size: 0.75rem;
+                color: var(--n8-text-muted);
+            }
+        }
+    }
+}
+
+.submenu {
+    display: flex;
+    flex-direction: column;
+    padding-left: 3.2rem;
+    padding-right: 1rem;
+    margin-top: -0.2rem;
+    margin-bottom: 0.5rem;
+    animation: slideDown 0.2s ease-out;
+
+    .submenu-item {
+        padding: 0.5rem 0.75rem;
+        color: var(--n8-text-secondary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--n8-border);
+            transition: all 0.3s ease;
+        }
+
+        &:hover {
+            color: var(--n8-text-primary);
+            background: var(--n8-surface-2);
+
+            &::before { background: var(--n8-blue); }
+        }
+
+        &.active {
+            color: var(--n8-blue);
+            font-weight: 700;
+
+            &::before {
+                background: var(--n8-blue);
+            }
+        }
+    }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,153 @@
+<!-- HEADER: TÍTULO E AÇÃO PRINCIPAL -->
+<div class="elite-page-header n8-flex n8-justify-between n8-align-center n8-mb-6">
+  <div>
+    <h1 class="n8-heading-xl">Catálogo</h1>
+    <p class="n8-body n8-text-muted">Gerencie seus produtos e serviços oferecidos.</p>
+  </div>
+  <div class="header-actions">
+    <button class="n8-btn n8-btn--primary" (click)="openCreateDialog()">
+      <lucide-icon name="plus" [size]="18"></lucide-icon>
+      <span>Novo Item</span>
+    </button>
+  </div>
+</div>
+
+<!-- CONTROLES: FILTROS E BUSCA -->
+<div class="elite-controls-bar n8-mb-6" style="margin-bottom: 1rem;">
+  <div class="elite-filters w-full n8-flex n8-gap-3">
+    
+    <!-- Busca Elite -->
+    <div class="search-box-elite n8-flex-1">
+      <lucide-icon name="search" [size]="18" class="search-icon"></lucide-icon>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Buscar por nome ou descrição..."
+        [formControl]="searchControl"
+      />
+    </div>
+
+    <!-- Filtro de Tipo (Angular Material) -->
+    <mat-form-field class="n8-mat-select-filter" subscriptSizing="dynamic" appearance="outline">
+      <mat-select [ngModel]="typeFilter()" (ngModelChange)="onTypeFilterChange($event)" panelClass="n8-select-panel" placeholder="Tipo de Item">
+        <mat-option value="ALL">Todos os Tipos</mat-option>
+        <mat-option value="PRODUCT">Apenas Produtos</mat-option>
+        <mat-option value="SERVICE">Apenas Serviços</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Filtro de Status (Angular Material) -->
+    <mat-form-field class="n8-mat-select-filter" subscriptSizing="dynamic" appearance="outline">
+      <mat-select [ngModel]="activeFilter()" (ngModelChange)="onActiveFilterChange($event)" panelClass="n8-select-panel" placeholder="Status do Item">
+        <mat-option value="active">Apenas Ativos</mat-option>
+        <mat-option value="inactive">Apenas Inativos</mat-option>
+        <mat-option value="all">Todos os Status</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+</div>
+
+<!-- CONTEÚDO: TABELA ELITE -->
+<div class="saas-card saas-card--table">
+  
+  @if (loading()) {
+    <div class="elite-state-box">
+      <lucide-icon name="loader-2" [size]="32" class="n8-loading-spin text-primary"></lucide-icon>
+      <p class="n8-body n8-mt-4">Carregando catálogo...</p>
+    </div>
+  } @else if (items().length === 0) {
+    <div class="elite-state-box empty-state">
+      <div class="icon-wrapper bg-dark-glass n8-mb-4"><lucide-icon name="package-open" [size]="28"></lucide-icon></div>
+      <h3 class="n8-heading-md">Nenhum item encontrado</h3>
+      <p class="n8-caption text-muted">Ajuste os filtros acima ou cadastre um novo produto/serviço.</p>
+    </div>
+  } @else {
+    <div class="n8-table-wrapper">
+      <table class="n8-table elite-table">
+        <thead>
+          <tr>
+            <th>Nome do Item</th>
+            <th class="n8-text-center">Tipo</th>
+            <th class="n8-text-right">Valores</th>
+            <th class="n8-text-right">Lucro / Margem</th>
+            <th class="n8-text-center">Status</th>
+            <th class="n8-text-right">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of items(); track item.id) {
+            <tr>
+              <td data-label="Nome do Item">
+                <div class="n8-flex n8-flex-col">
+                  <span class="n8-text-primary font-bold">{{ item.name }}</span>
+                  @if (item.unit) { <span class="n8-caption text-muted">Unid: {{ item.unit }}</span> }
+                </div>
+              </td>
+              
+              <td data-label="Tipo" class="n8-text-center">
+                <span class="badge-neutral" [ngClass]="item.type === 'PRODUCT' ? 'text-info' : 'text-warning'">
+                  {{ item.type === 'PRODUCT' ? 'Produto' : 'Serviço' }}
+                </span>
+              </td>
+              
+              <td data-label="Valores" class="n8-text-right">
+                <div class="n8-flex n8-flex-col n8-gap-1">
+                  <span class="n8-body font-bold n8-text-primary">Venda: {{ item.salePrice | currency:'BRL' }}</span>
+                  @if (item.costPrice) { 
+                    <span class="n8-caption text-muted">Custo: {{ item.costPrice | currency:'BRL' }}</span> 
+                  }
+                </div>
+              </td>
+              
+              <td data-label="Lucro / Margem" class="n8-text-right">
+                <div class="n8-flex n8-flex-col n8-gap-1">
+                  <span class="n8-body font-bold" [class.text-success]="item.profit > 0">{{ item.profit | currency:'BRL' }}</span>
+                  <span class="n8-caption text-muted">{{ item.profitMargin }}% de margem</span>
+                </div>
+              </td>
+              
+              <td data-label="Status" class="n8-text-center">
+                @if (item.active) {
+                  <span class="badge-success">Ativo</span>
+                } @else {
+                  <span class="badge-neutral">Inativo</span>
+                }
+              </td>
+              
+              <td data-label="Ações" class="n8-text-right">
+                <div class="n8-flex n8-gap-2 n8-justify-end">
+                  <button class="btn-icon-outline" title="Editar" (click)="openEditDialog(item)">
+                    <lucide-icon name="pencil" [size]="16"></lucide-icon>
+                  </button>
+                  
+                  @if (item.active) {
+                    <button class="btn-icon-danger" title="Inativar" (click)="deactivate(item)">
+                      <lucide-icon name="trash-2" [size]="16"></lucide-icon>
+                    </button>
+                  } @else {
+                    <span class="text-muted n8-flex n8-align-center n8-justify-center" style="width: 32px;">—</span>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginação Elite -->
+    <div class="elite-pagination n8-flex n8-justify-between n8-align-center">
+      <span class="n8-caption text-muted">{{ total() }} item(ns) encontrado(s)</span>
+      <div class="n8-flex n8-gap-3 n8-align-center">
+        <button class="btn-icon-outline" [disabled]="page() === 1" (click)="goToPage(page() - 1)">
+          <lucide-icon name="chevron-left" [size]="16"></lucide-icon>
+        </button>
+        <span class="n8-caption font-medium">Página {{ page() }} de {{ totalPages() }}</span>
+        <button class="btn-icon-outline" [disabled]="page() === totalPages()" (click)="goToPage(page() + 1)">
+          <lucide-icon name="chevron-right" [size]="16"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  }
+</div>

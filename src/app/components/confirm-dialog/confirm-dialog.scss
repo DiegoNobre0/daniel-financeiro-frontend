@@ -1,0 +1,69 @@
+.n8-confirm-dialog {
+    padding: var(--n8-space-6) var(--n8-space-8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: var(--n8-surface); // Fundo branco Nove8
+    border-radius: var(--n8-radius-lg);
+
+    &__icon {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+
+        lucide-icon {
+            width: 1.75rem;
+            height: 1.75rem;
+        }
+
+        &.is-info {
+            background: var(--n8-blue-subtle);
+            color: var(--n8-blue);
+        }
+
+        &.is-danger {
+            background: var(--n8-danger-bg);
+            color: var(--n8-danger);
+        }
+    }
+
+    &__title {
+        color: var(--n8-text-primary);
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0 0 0.75rem 0;
+    }
+
+    &__text {
+        color: var(--n8-text-secondary);
+        font-size: 0.9375rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    &__actions {
+        display: flex;
+        gap: var(--n8-space-3);
+        margin-top: 2rem;
+        width: 100%;
+
+        .n8-btn {
+            flex: 1; // Faz os dois botões terem o mesmo tamanho
+        }
+
+        // Sobrescreve o botão primário para ficar vermelho se for Danger
+        .n8-btn--danger {
+            background: var(--n8-danger) !important;
+            color: #ffffff !important;
+
+            &:hover {
+                background: #B91C1C !important; // Tom mais escuro de vermelho
+            }
+        }
+    }
+}

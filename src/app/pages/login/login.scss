@@ -1,0 +1,322 @@
+// login.component.scss
+
+// ─── ESTRUTURA GERAL DA PÁGINA ──────────────────────────────
+.n8-login-wrapper {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--n8-bg);
+}
+
+// ─── ANIMAÇÕES ──────────────────────────────────────────────
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30px, 40px) scale(1.05); }
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// ─── LADO ESQUERDO (BRANDING) ───────────────────────────────
+.n8-login-brand {
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    flex: 1.2;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 4rem;
+    
+    // CORREÇÃO CRÍTICA: Usando as variáveis --n8-blue que existem no seu sistema
+    background: linear-gradient(-45deg, var(--n8-blue-dark), var(--n8-blue), #0f172a, var(--n8-blue-dark));
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+    overflow: hidden;
+  }
+
+  // Efeito de vidro/overlay para garantir que o texto sempre fique legível
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(5, 26, 84, 0.4) 100%);
+    z-index: 1;
+  }
+
+  &__glow-1 {
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, rgba(26, 75, 204, 0.25) 0%, transparent 60%);
+    filter: blur(80px);
+    animation: floatOrb 6s ease-in-out infinite alternate;
+  }
+
+  &__glow-2 {
+    position: absolute;
+    bottom: -15%;
+    right: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 60%);
+    filter: blur(100px);
+    animation: floatOrb 8s ease-in-out infinite alternate-reverse;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 2;
+    max-width: 500px;
+    text-align: center;
+    animation: slideUpFade 0.8s ease-out;
+
+    .tagline {
+      font-size: 2rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.5px;
+    }
+
+    .text-logo {
+      font-size: 5rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 2rem;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .tagline-sub {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.125rem;
+      line-height: 1.7;
+      font-weight: 400;
+      padding: 0 1rem;
+    }
+  }
+}
+
+// ─── LADO DIREITO (FORMULÁRIO DE LOGIN) ─────────────────────
+.n8-login-form-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: var(--n8-bg);
+}
+
+.n8-login-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--n8-surface);
+  border: 1px solid var(--n8-border);
+  border-radius: var(--n8-radius-xl);
+  padding: 3rem 2.5rem;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+  animation: slideUpFade 0.6s ease-out;
+
+  @media (max-width: 480px) {
+    padding: 2rem 1.5rem;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+
+    .header-icon-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      border-radius: var(--n8-radius-lg);
+      background: var(--n8-blue-subtle);
+      color: var(--n8-blue);
+      margin-bottom: 1.25rem;
+      box-shadow: inset 0 0 0 1px rgba(10, 46, 140, 0.1);
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--n8-text-primary);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    p {
+      font-size: 0.95rem;
+      color: var(--n8-text-secondary);
+    }
+  }
+}
+
+// ─── FORMULÁRIO INTERNO ─────────────────────────────────────
+.n8-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--n8-text-primary);
+    }
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .forgot-link {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--n8-blue);
+      text-decoration: none;
+      transition: color var(--n8-transition);
+
+      &:hover {
+        color: var(--n8-blue-hover);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // Estilo específico para os inputs garantindo que não fiquem invisíveis
+  .n8-input {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: var(--n8-surface-2);
+    border: 1px solid var(--n8-border);
+    border-radius: var(--n8-radius-md);
+    color: var(--n8-text-primary);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all var(--n8-transition);
+
+    &::placeholder {
+      color: var(--n8-text-muted);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--n8-blue);
+      background-color: var(--n8-surface);
+      box-shadow: 0 0 0 4px rgba(10, 46, 140, 0.1);
+    }
+  }
+
+  .input-with-icon {
+    position: relative;
+
+    input {
+      padding-right: 48px;
+    }
+
+    .icon-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--n8-text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border-radius: var(--n8-radius-sm);
+      transition: all var(--n8-transition);
+
+      &:hover {
+        color: var(--n8-blue);
+        background-color: var(--n8-surface-2);
+      }
+
+      lucide-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .n8-error-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--n8-danger-bg);
+    border: 1px solid var(--n8-danger-border);
+    color: var(--n8-danger);
+    padding: 12px 16px;
+    border-radius: var(--n8-radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    animation: slideUpFade 0.3s ease;
+  }
+
+  // CORREÇÃO CRÍTICA: Trocado --n8-primary por --n8-blue
+  .n8-btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--n8-blue); 
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--n8-radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 12px rgba(10, 46, 140, 0.2);
+
+    &:hover:not(:disabled) {
+      background: var(--n8-blue-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(10, 46, 140, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+  }
+}

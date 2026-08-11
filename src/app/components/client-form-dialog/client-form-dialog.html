@@ -1,0 +1,68 @@
+<div class="n8-form-dialog">
+  <div class="n8-form-dialog__header">
+    <h2 class="n8-heading-lg">{{ isEdit ? 'Editar cliente' : 'Novo cliente' }}</h2>
+    <button class="n8-btn n8-btn--icon" (click)="close()">
+      <lucide-icon name="x" [size]="18"></lucide-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="n8-form-dialog__body">
+    <div class="form-field">
+      <label class="n8-label">Nome completo *</label>
+      <input type="text" class="n8-input" formControlName="name" placeholder="Ex: João da Silva" />
+      @if (form.get('name')?.touched && form.get('name')?.invalid) {
+        <span class="field-error">Informe um nome válido (mínimo 3 caracteres).</span>
+      }
+    </div>
+
+    <div class="form-field">
+  <label class="n8-label">CPF ou CNPJ</label>
+  <input
+    type="text"
+    class="n8-input"
+    formControlName="document"
+    mask="000.000.000-00||00.000.000/0000-00"
+    [dropSpecialCharacters]="true"
+    placeholder="000.000.000-00"
+  />
+  @if (form.get('document')?.touched && form.get('document')?.invalid) {
+    <span class="field-error">Documento inválido.</span>
+  }
+</div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label class="n8-label">E-mail</label>
+        <input type="email" class="n8-input" formControlName="email" placeholder="cliente@email.com" />
+      </div>
+
+      <div class="form-field">
+        <label class="n8-label">Telefone</label>
+        <input
+          type="text"
+          class="n8-input"
+          formControlName="phone"
+          mask="(00) 00000-0000"
+          placeholder="(00) 00000-0000"
+        />
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label class="n8-label">Endereço</label>
+      <input type="text" class="n8-input" formControlName="address" placeholder="Rua, número, bairro..." />
+    </div>
+
+    <div class="n8-form-dialog__actions">
+      <button type="button" class="n8-btn n8-btn--secondary" (click)="close()">Cancelar</button>
+      <button type="submit" class="n8-btn n8-btn--primary" [disabled]="saving()">
+        @if (saving()) {
+          <lucide-icon name="loader-2" [size]="16" class="n8-loading-spin"></lucide-icon>
+        } @else {
+          <lucide-icon name="save" [size]="16"></lucide-icon>
+        }
+        <span>{{ isEdit ? 'Salvar alterações' : 'Cadastrar cliente' }}</span>
+      </button>
+    </div>
+  </form>
+</div>

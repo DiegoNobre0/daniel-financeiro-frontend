@@ -1,0 +1,126 @@
+<!-- HEADER: TÍTULO E AÇÃO PRINCIPAL -->
+<div class="elite-page-header n8-flex n8-justify-between n8-align-center n8-mb-6">
+  <div>
+    <h1 class="n8-heading-xl">Vendas</h1>
+    <p class="n8-body n8-text-muted">Gerencie as vendas realizadas e o vínculo com os clientes.</p>
+  </div>
+  <div class="header-actions">
+    <button class="n8-btn n8-btn--primary" (click)="openCreateDialog()">
+      <lucide-icon name="shopping-cart" [size]="18"></lucide-icon>
+      <span>Nova Venda</span>
+    </button>
+  </div>
+</div>
+
+<!-- CONTROLES: FILTROS -->
+<div class="elite-controls-bar n8-mb-6" style="padding-bottom: 1rem;"> 
+  <div class="elite-filters w-full n8-flex n8-justify-end">
+    <!-- Filtro de Status com Angular Material -->
+    <mat-form-field class="n8-mat-select-filter" subscriptSizing="dynamic" appearance="outline">
+      <mat-select [ngModel]="statusFilter()" (ngModelChange)="onStatusFilterChange($event)" panelClass="n8-select-panel" placeholder="Status da Venda">
+        <mat-option value="ALL">Todos os Status</mat-option>
+        <mat-option value="ACTIVE">Ativos / Vigentes</mat-option>
+        <mat-option value="FINISHED">Finalizados</mat-option>
+        <mat-option value="CANCELED">Cancelados</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+<!-- CONTEÚDO: TABELA ELITE -->
+<div class="saas-card saas-card--table">
+  
+  @if (loading()) {
+    <div class="elite-state-box">
+      <lucide-icon name="loader-2" [size]="32" class="n8-loading-spin text-primary"></lucide-icon>
+      <p class="n8-body n8-mt-4">Buscando histórico de vendas...</p>
+    </div>
+  } @else if (contracts().length === 0) {
+    <div class="elite-state-box empty-state">
+      <!-- Troquei o clipboard-list por shopping-bag para evitar erro de ícone e combinar mais -->
+      <div class="icon-wrapper bg-dark-glass n8-mb-4"><lucide-icon name="shopping-bag" [size]="28"></lucide-icon></div>
+      <h3 class="n8-heading-md">Nenhuma venda encontrada</h3>
+      <p class="n8-caption text-muted">Ajuste os filtros acima ou registre uma nova venda.</p>
+    </div>
+  } @else {
+    <div class="n8-table-wrapper">
+      <table class="n8-table elite-table">
+        <thead>
+          <tr>
+            <th>Cliente / Data</th>
+            <th>Produto / Serviço</th>
+            <th class="n8-text-center">Qtd.</th>
+            <th class="n8-text-right">Valor Total</th>
+            <th class="n8-text-center">Status</th>
+            <th class="n8-text-right">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (contract of contracts(); track contract.id) {
+            <tr>
+              <td data-label="Cliente" class="font-medium">
+                <div class="n8-flex n8-flex-col">
+                  <span class="n8-text-primary">{{ contract.clientName }}</span>
+                  <span class="n8-caption text-muted" style="font-weight: 400;">{{ contract.contractDate | date:'dd/MM/yyyy' }}</span>
+                </div>
+              </td>
+              
+              <td data-label="Produto / Serviço" class="n8-text-secondary">
+                {{ contract.productServiceName }}
+              </td>
+              
+              <td data-label="Qtd." class="n8-text-center font-medium">
+                <span class="badge-neutral">{{ contract.quantity }}</span>
+              </td>
+              
+              <td data-label="Valor Total" class="n8-text-right">
+                <div class="n8-flex n8-flex-col n8-gap-1">
+                  <span class="font-bold n8-text-primary">{{ contract.totalValue | currency:'BRL' }}</span>
+                  <span class="n8-caption font-medium" [ngClass]="contract.profit > 0 ? 'text-success' : 'text-muted'">
+                    Lucro: {{ contract.profit | currency:'BRL' }} ({{ contract.profitMargin }}%)
+                  </span>
+                </div>
+              </td>
+              
+              <td data-label="Status" class="n8-text-center">
+                @if (contract.status === 'ACTIVE') {
+                  <span class="badge-success">Ativo</span>
+                } @else if (contract.status === 'FINISHED') {
+                  <span class="badge-info">Finalizado</span>
+                } @else {
+                  <span class="badge-danger">Cancelado</span>
+                }
+              </td>
+              
+              <td data-label="Ações" class="n8-text-right">
+                <div class="n8-flex n8-gap-2 n8-justify-end">
+                  @if (contract.status === 'ACTIVE') {
+                    <button class="btn-icon-danger" title="Cancelar Venda" (click)="cancelContract(contract)">
+                      <lucide-icon name="ban" [size]="16"></lucide-icon>
+                    </button>
+                  } @else {
+                    <span class="text-muted">—</span>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginação Elite -->
+    <div class="elite-pagination n8-flex n8-justify-between n8-align-center">
+      <span class="n8-caption text-muted">{{ total() }} venda(s) encontrada(s)</span>
+      <div class="n8-flex n8-gap-3 n8-align-center">
+        <button class="btn-icon-outline" [disabled]="page() === 1" (click)="goToPage(page() - 1)">
+          <lucide-icon name="chevron-left" [size]="16"></lucide-icon>
+        </button>
+        <span class="n8-caption font-medium">Página {{ page() }} de {{ totalPages() }}</span>
+        <button class="btn-icon-outline" [disabled]="page() === totalPages()" (click)="goToPage(page() + 1)">
+          <lucide-icon name="chevron-right" [size]="16"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  }
+</div>
