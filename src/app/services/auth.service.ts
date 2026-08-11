@@ -17,7 +17,7 @@ interface RefreshResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.apiUrl.replace(/\/+$/, '');
 
   currentUser = signal<User | null>(null);
   isInitializing = signal<boolean>(true);
