@@ -25,7 +25,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
     catchError((error: HttpErrorResponse) => {
       if (
         error.status === 401 &&
-        !req.url.includes('/auth/login') &&
+        !req.url.includes('auth/login') &&
         !req.url.includes('/auth/refresh')
       ) {
         if (!isRefreshing) {
