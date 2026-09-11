@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -97,11 +97,18 @@ import {
   BarChart3,
   Scale,
   CheckCircle2,
-  Edit
+  Edit,
+  WalletCards,
+  BadgeCheck,
+  Mail,
+  CircleDollarSign,
+  TriangleAlert
 } from 'lucide-angular';
 import { AuthService } from './services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import localePt from '@angular/common/locales/pt';
+import { registerLocaleData } from '@angular/common';
 
 // 1. Criamos a função que "Trava" o Angular até o login silencioso terminar
 export function initializeApp(authService: AuthService) {
@@ -110,6 +117,7 @@ export function initializeApp(authService: AuthService) {
     return firstValueFrom(authService.autoLogin());
   };
 }
+registerLocaleData(localePt);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -120,7 +128,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideNativeDateAdapter(),    
     {
-      provide: MAT_DATE_LOCALE, 
+      provide: LOCALE_ID, 
       useValue: 'pt-BR' 
     },
 
@@ -144,7 +152,7 @@ export const appConfig: ApplicationConfig = {
         CalendarDays, ChevronLeft ,CalendarPlus, Ban, Wallet, Lock , Unlock, CheckSquare , Receipt , ArrowLeftRight , Wrench, Percent,
         Smartphone, ExternalLink, Instagram, MapPin, Copy, CalendarClock, XCircle, BarChart2, Filter, PlusCircle, LogIn, ArrowRightLeft,
         ClipboardList, ArrowDownCircle, ArrowUpCircle, PackageOpen ,BellRing, UserMinus, TrendingDown, AlertCircle , ArrowDownLeft, ArrowUpRight,Circle,
-        ListChecks, ArrowDownRight, Minus, BarChart3, Scale , CheckCircle2, Edit
+        ListChecks, ArrowDownRight, Minus, BarChart3, Scale , CheckCircle2, Edit , WalletCards, BadgeCheck, Mail, CircleDollarSign, TriangleAlert
       })
     )
   ]

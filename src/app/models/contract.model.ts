@@ -1,40 +1,93 @@
 export interface Contract {
   id: string;
+
   clientId: string;
   productServiceId: string;
-  clientName?: string;
-  productServiceName?: string;
+
+  clientName: string;
+  productServiceName: string;
+
   quantity: number;
-  unitCost?: number | null;
+
   unitPrice: number;
-  totalCost?: number | null;
+  unitCost: number;
+
   totalValue: number;
+  totalCost: number;
+  totalProfit: number;
+
   profit: number;
   profitMargin: number;
-  contractDate: string;
+
+  paymentMethod: 'CASH' | 'INSTALLMENT';
+  installmentsQty: number;
+
   status: 'ACTIVE' | 'FINISHED' | 'CANCELED';
+
+  contractDate: string;
+
   notes?: string | null;
-  createdAt: string;
+
+  transactionId?: string | null;
 }
 
 export interface CreateContractDto {
   clientId: string;
   productServiceId: string;
   quantity: number;
+
   paymentMethod: 'CASH' | 'INSTALLMENT';
   installmentsQty: number;
+
   contractDate?: string;
+
   notes?: string;
-  
-  // Integração com o financeiro
-  generateTransaction: boolean;
+
+  generateTransaction?: boolean;
   firstDueDate?: string;
   intervalDays?: number;
 }
 
 export interface UpdateContractDto {
-  status?: 'ACTIVE' | 'FINISHED' | 'CANCELED';
-  notes?: string;
+  clientId: string;
+  productServiceId: string;
+  quantity: number;
+
+  paymentMethod: 'CASH' | 'INSTALLMENT';
+  installmentsQty: number;
+
+  contractDate: string;
+}
+
+export interface ListContractsQuery {
+  page?: number;
+  perPage?: number;
+
+  clientId?: string;
+
+  status?:
+  | 'ACTIVE'
+  | 'FINISHED'
+  | 'CANCELED';
+
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface UpdateContractDto {
+  clientId: string;
+
+  productServiceId: string;
+
+  quantity: number;
+
+  paymentMethod:
+  | 'CASH'
+  | 'INSTALLMENT';
+
+  installmentsQty: number;
+
+  contractDate: string;
 }
 
 export interface ListContractsQuery {

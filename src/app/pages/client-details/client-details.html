@@ -1,0 +1,980 @@
+@if (loading()) {
+
+  <div class="client-details-loading">
+
+    <lucide-icon
+      name="loader-2"
+      [size]="34"
+      class="n8-loading-spin text-primary"
+    ></lucide-icon>
+
+    <p>
+      Carregando ficha do cliente...
+    </p>
+
+  </div>
+
+} @else if (details(); as data) {
+
+  <!-- ===================================================
+       HEADER
+  ==================================================== -->
+
+  <div class="details-header">
+
+    <div class="details-header__left">
+
+      <a
+        routerLink="/clientes"
+        class="back-link"
+      >
+        <lucide-icon
+          name="arrow-left"
+          [size]="16"
+        ></lucide-icon>
+
+        Clientes
+      </a>
+
+      <div class="client-heading">
+
+        <div class="client-avatar">
+          {{
+            data.client.name
+              .charAt(0)
+              .toUpperCase()
+          }}
+        </div>
+
+        <div>
+
+          <div class="client-title-row">
+
+            <h1>
+              {{ data.client.name }}
+            </h1>
+
+            @if (data.client.active) {
+
+              <span class="badge-success">
+                Ativo
+              </span>
+
+            } @else {
+
+              <span class="badge-neutral">
+                Inativo
+              </span>
+
+            }
+
+          </div>
+
+          <p>
+            Cliente desde
+            {{
+              data.client.createdAt
+                | date:'dd/MM/yyyy'
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="details-header__actions">
+
+      <button
+        class="n8-btn n8-btn--secondary"
+        (click)="openEditDialog()"
+      >
+        <lucide-icon
+          name="pencil"
+          [size]="16"
+        ></lucide-icon>
+
+        Editar Cliente
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================
+       DADOS DO CLIENTE
+  ==================================================== -->
+
+  <div class="client-info-card">
+
+    <div class="client-info-item">
+
+      <div class="info-icon">
+        <lucide-icon
+          name="badge-check"
+          [size]="18"
+        ></lucide-icon>
+      </div>
+
+      <div>
+        <span class="info-label">
+          CPF / CNPJ
+        </span>
+
+        <strong>
+          {{
+            formatDocument(
+              data.client.document
+            )
+          }}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="client-info-item">
+
+      <div class="info-icon">
+        <lucide-icon
+          name="phone"
+          [size]="18"
+        ></lucide-icon>
+      </div>
+
+      <div>
+        <span class="info-label">
+          Telefone
+        </span>
+
+        <strong>
+          {{
+            formatPhone(
+              data.client.phone
+            )
+          }}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="client-info-item">
+
+      <div class="info-icon">
+        <lucide-icon
+          name="mail"
+          [size]="18"
+        ></lucide-icon>
+      </div>
+
+      <div>
+        <span class="info-label">
+          E-mail
+        </span>
+
+        <strong>
+          {{
+            data.client.email ||
+            'Não informado'
+          }}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="client-info-item">
+
+      <div class="info-icon">
+        <lucide-icon
+          name="map-pin"
+          [size]="18"
+        ></lucide-icon>
+      </div>
+
+      <div>
+        <span class="info-label">
+          Endereço
+        </span>
+
+        <strong>
+          {{
+            data.client.address ||
+            'Não informado'
+          }}
+        </strong>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================
+       INDICADORES
+  ==================================================== -->
+
+  <div class="summary-grid">
+
+    <!-- TOTAL COMPRADO -->
+    <div class="summary-card">
+
+      <div class="summary-card__header">
+
+        <span>
+          Total Comprado
+        </span>
+
+        <div class="summary-icon bg-success">
+          <lucide-icon
+            name="circle-dollar-sign"
+            [size]="19"
+          ></lucide-icon>
+        </div>
+
+      </div>
+
+      <strong class="summary-value">
+        {{
+          data.summary.totalSpent
+            | currency:'BRL'
+        }}
+      </strong>
+
+      <span class="summary-caption">
+        {{
+          data.summary.totalPurchases
+        }}
+        compra(s)
+      </span>
+
+    </div>
+
+
+    <!-- COMPRAS -->
+    <div class="summary-card">
+
+      <div class="summary-card__header">
+
+        <span>
+          Compras
+        </span>
+
+        <div class="summary-icon bg-primary">
+          <lucide-icon
+            name="shopping-bag"
+            [size]="19"
+          ></lucide-icon>
+        </div>
+
+      </div>
+
+      <strong class="summary-value">
+        {{
+          data.summary.totalPurchases
+        }}
+      </strong>
+
+      <span class="summary-caption">
+        {{
+          data.summary.activeContracts
+        }}
+        ativa(s)
+      </span>
+
+    </div>
+
+
+    <!-- EM ABERTO -->
+    <div class="summary-card">
+
+      <div class="summary-card__header">
+
+        <span>
+          Em Aberto
+        </span>
+
+        <div class="summary-icon bg-warning">
+          <lucide-icon
+            name="clock"
+            [size]="19"
+          ></lucide-icon>
+        </div>
+
+      </div>
+
+      <strong class="summary-value">
+        {{
+          data.summary.totalOpen
+            | currency:'BRL'
+        }}
+      </strong>
+
+      <span class="summary-caption">
+        Valores pendentes
+      </span>
+
+    </div>
+
+
+    <!-- EM ATRASO -->
+    <div
+      class="summary-card"
+      [class.summary-card--danger]="
+        data.summary.totalOverdue > 0
+      "
+    >
+
+      <div class="summary-card__header">
+
+        <span>
+          Em Atraso
+        </span>
+
+        <div class="summary-icon bg-danger">
+          <lucide-icon
+            name="triangle-alert"
+            [size]="19"
+          ></lucide-icon>
+        </div>
+
+      </div>
+
+      <strong
+        class="summary-value"
+        [class.text-danger]="
+          data.summary.totalOverdue > 0
+        "
+      >
+        {{
+          data.summary.totalOverdue
+            | currency:'BRL'
+        }}
+      </strong>
+
+      <span class="summary-caption">
+        Recebíveis vencidos
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================
+       TABS
+  ==================================================== -->
+
+  <div class="details-tabs">
+
+    <button
+      [class.active]="
+        activeTab() === 'PURCHASES'
+      "
+      (click)="setTab('PURCHASES')"
+    >
+      <lucide-icon
+        name="shopping-cart"
+        [size]="16"
+      ></lucide-icon>
+
+      Compras
+
+      <span class="tab-count">
+        {{ data.purchases.length }}
+      </span>
+    </button>
+
+
+    <button
+      [class.active]="
+        activeTab() === 'FINANCIAL'
+      "
+      (click)="setTab('FINANCIAL')"
+    >
+      <lucide-icon
+        name="wallet"
+        [size]="16"
+      ></lucide-icon>
+
+      Financeiro
+
+      <span class="tab-count">
+        {{ data.transactions.length }}
+      </span>
+    </button>
+
+
+    <button
+      [class.active]="
+        activeTab() === 'TASKS'
+      "
+      (click)="setTab('TASKS')"
+    >
+      <lucide-icon
+        name="calendar-check"
+        [size]="16"
+      ></lucide-icon>
+
+      Agenda
+
+      <span class="tab-count">
+        {{ data.tasks.length }}
+      </span>
+    </button>
+
+  </div>
+
+
+  <!-- ===================================================
+       COMPRAS
+  ==================================================== -->
+
+  @if (
+    activeTab() === 'PURCHASES'
+  ) {
+
+    <div class="saas-card saas-card--table">
+
+      @if (
+        data.purchases.length === 0
+      ) {
+
+        <div class="empty-state">
+
+          <lucide-icon
+            name="shopping-bag"
+            [size]="30"
+          ></lucide-icon>
+
+          <h3>
+            Nenhuma compra registrada
+          </h3>
+
+          <p>
+            Este cliente ainda não possui
+            vendas vinculadas.
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="n8-table-wrapper">
+
+          <table class="elite-table">
+
+            <thead>
+              <tr>
+
+                <th>
+                  Data
+                </th>
+
+                <th>
+                  Produto / Serviço
+                </th>
+
+                <th class="text-center">
+                  Qtd.
+                </th>
+
+                <th class="text-right">
+                  Valor
+                </th>
+
+                <th class="text-center">
+                  Pagamento
+                </th>
+
+                <th class="text-center">
+                  Status
+                </th>
+
+              </tr>
+            </thead>
+
+            <tbody>
+
+              @for (
+                purchase
+                of data.purchases;
+                track purchase.id
+              ) {
+
+                <tr>
+
+                  <td>
+                    {{
+                      purchase.contractDate
+                        | date:'dd/MM/yyyy'
+                    }}
+                  </td>
+
+
+                  <td>
+
+                    <span class="font-medium">
+                      {{
+                        purchase.productServiceName
+                      }}
+                    </span>
+
+                  </td>
+
+
+                  <td class="text-center">
+
+                    <span class="quantity-pill">
+                      {{ purchase.quantity }}
+                    </span>
+
+                  </td>
+
+
+                  <td class="text-right font-bold">
+
+                    {{
+                      purchase.totalValue
+                        | currency:'BRL'
+                    }}
+
+                  </td>
+
+
+                  <td class="text-center">
+
+                    {{
+                      purchase.paymentMethod ===
+                      'CASH'
+                        ? 'À vista'
+                        : purchase.installmentsQty
+                          + 'x'
+                    }}
+
+                  </td>
+
+
+                  <td class="text-center">
+
+                    @switch (
+                      purchase.status
+                    ) {
+
+                      @case ('ACTIVE') {
+
+                        <span class="badge-success">
+                          Ativo
+                        </span>
+
+                      }
+
+                      @case ('FINISHED') {
+
+                        <span class="badge-info">
+                          Finalizado
+                        </span>
+
+                      }
+
+                      @case ('CANCELED') {
+
+                        <span class="badge-danger">
+                          Cancelado
+                        </span>
+
+                      }
+
+                    }
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+
+  <!-- ===================================================
+       FINANCEIRO
+  ==================================================== -->
+
+  @if (
+    activeTab() === 'FINANCIAL'
+  ) {
+
+    <div class="saas-card saas-card--table">
+
+      @if (
+        data.transactions.length === 0
+      ) {
+
+        <div class="empty-state">
+
+          <lucide-icon
+            name="wallet"
+            [size]="30"
+          ></lucide-icon>
+
+          <h3>
+            Nenhuma movimentação
+          </h3>
+
+          <p>
+            Não existem lançamentos
+            financeiros para este cliente.
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="n8-table-wrapper">
+
+          <table class="elite-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Data
+                </th>
+
+                <th>
+                  Descrição
+                </th>
+
+                <th>
+                  Tipo
+                </th>
+
+                <th class="text-right">
+                  Valor
+                </th>
+
+                <th class="text-center">
+                  Status
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                tx
+                of data.transactions;
+                track tx.id
+              ) {
+
+                <tr>
+
+                  <td>
+                    {{
+                      tx.createdAt
+                        | date:'dd/MM/yyyy'
+                    }}
+                  </td>
+
+
+                  <td class="font-medium">
+                    {{ tx.description }}
+                  </td>
+
+
+                  <td>
+
+                    <span
+                      [class.text-success]="
+                        tx.type === 'INCOME'
+                      "
+                      [class.text-danger]="
+                        tx.type === 'EXPENSE'
+                      "
+                    >
+                      {{
+                        tx.type ===
+                        'INCOME'
+                          ? 'Receita'
+                          : 'Despesa'
+                      }}
+                    </span>
+
+                  </td>
+
+
+                  <td
+                    class="text-right font-bold"
+                    [class.text-success]="
+                      tx.type === 'INCOME'
+                    "
+                    [class.text-danger]="
+                      tx.type === 'EXPENSE'
+                    "
+                  >
+
+                    {{
+                      tx.totalValue
+                        | currency:'BRL'
+                    }}
+
+                  </td>
+
+
+                  <td class="text-center">
+
+                    @switch (
+                      tx.status
+                    ) {
+
+                      @case ('PAID') {
+
+                        <span class="badge-success">
+                          Pago
+                        </span>
+
+                      }
+
+                      @case ('PENDING') {
+
+                        <span class="badge-warning">
+                          Pendente
+                        </span>
+
+                      }
+
+                      @case ('OVERDUE') {
+
+                        <span class="badge-danger">
+                          Atrasado
+                        </span>
+
+                      }
+
+                      @case ('PARTIALLY_PAID') {
+
+                        <span class="badge-info">
+                          Parcial
+                        </span>
+
+                      }
+
+                      @case ('CANCELED') {
+
+                        <span class="badge-neutral">
+                          Cancelado
+                        </span>
+
+                      }
+
+                    }
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+
+  <!-- ===================================================
+       AGENDA
+  ==================================================== -->
+
+  @if (
+    activeTab() === 'TASKS'
+  ) {
+
+    <div class="saas-card saas-card--table">
+
+      @if (
+        data.tasks.length === 0
+      ) {
+
+        <div class="empty-state">
+
+          <lucide-icon
+            name="calendar"
+            [size]="30"
+          ></lucide-icon>
+
+          <h3>
+            Nenhuma tarefa
+          </h3>
+
+          <p>
+            Não existem tarefas vinculadas
+            a este cliente.
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="n8-table-wrapper">
+
+          <table class="elite-table">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Tarefa
+                </th>
+
+                <th>
+                  Data
+                </th>
+
+                <th class="text-center">
+                  Prioridade
+                </th>
+
+                <th class="text-center">
+                  Status
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                task
+                of data.tasks;
+                track task.id
+              ) {
+
+                <tr>
+
+                  <td class="font-medium">
+                    {{ task.title }}
+                  </td>
+
+
+                  <td>
+                    {{
+                      task.dueDate
+                        | date:'dd/MM/yyyy HH:mm'
+                    }}
+                  </td>
+
+
+                  <td class="text-center">
+
+                    @switch (
+                      task.priority
+                    ) {
+
+                      @case ('HIGH') {
+
+                        <span class="badge-danger">
+                          Alta
+                        </span>
+
+                      }
+
+                      @case ('MEDIUM') {
+
+                        <span class="badge-warning">
+                          Média
+                        </span>
+
+                      }
+
+                      @case ('LOW') {
+
+                        <span class="badge-neutral">
+                          Baixa
+                        </span>
+
+                      }
+
+                    }
+
+                  </td>
+
+
+                  <td class="text-center">
+
+                    @switch (
+                      task.status
+                    ) {
+
+                      @case ('PENDING') {
+
+                        <span class="badge-warning">
+                          Pendente
+                        </span>
+
+                      }
+
+                      @case ('DONE') {
+
+                        <span class="badge-success">
+                          Concluída
+                        </span>
+
+                      }
+
+                      @case ('CANCELED') {
+
+                        <span class="badge-neutral">
+                          Cancelada
+                        </span>
+
+                      }
+
+                    }
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+}

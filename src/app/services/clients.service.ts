@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { Client, CreateClientDto, UpdateClientDto, ListClientsQuery } from '../models/client.model';
+import { Client, CreateClientDto, UpdateClientDto, ListClientsQuery, ClientDetails } from '../models/client.model';
 import { PaginatedResponse } from '../models/pagination.model';
 import { environment } from '../environments/environment';
 
@@ -36,4 +36,13 @@ export class ClientsService {
   delete(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`);
   }
+
+  getDetails(
+  id: string
+): Observable<ClientDetails> {
+
+  return this.http.get<ClientDetails>(
+    `${this.baseUrl}/${id}/details`
+  );
+}
 }

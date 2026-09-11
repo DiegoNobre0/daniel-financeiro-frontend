@@ -11,12 +11,13 @@ import { Client } from '../../models/client.model';
 import { ClientFormDialogComponent } from '../../components/client-form-dialog/client-form-dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-clients-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule, MatSelectModule, MatButtonModule, MatDialogModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule, MatSelectModule, MatButtonModule, MatDialogModule, RouterLink],
   templateUrl: './clientes-list.html',
   styleUrl: './clientes-list.scss',
 })

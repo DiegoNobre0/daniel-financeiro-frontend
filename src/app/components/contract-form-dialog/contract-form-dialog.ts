@@ -1,7 +1,7 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, Inject, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { LucideAngularModule } from 'lucide-angular';
 import { ContractsService } from '../../services/contracts.service';
 import { ClientsService } from '../../services/clients.service';
@@ -9,7 +9,7 @@ import { ProductsServicesService } from '../../services/products-services.servic
 import { UiFeedbackService } from '../../services/ui-feedback.service';
 import { Client } from '../../models/client.model';
 import { ProductService } from '../../models/product-service.model';
-import { CreateContractDto } from '../../models/contract.model';
+import { Contract, CreateContractDto, UpdateContractDto } from '../../models/contract.model';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -24,7 +24,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
   selector: 'app-contract-form-dialog',
   standalone: true,
   providers: [provideNativeDateAdapter()],
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, LucideAngularModule, MatSelectModule, MatButtonModule, FormsModule ,MatDatepickerModule , MatInputModule, MatFormFieldModule ],
+  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, LucideAngularModule, MatSelectModule, MatButtonModule, FormsModule, MatDatepickerModule, MatInputModule, MatFormFieldModule],
   templateUrl: './contract-form-dialog.html',
   styleUrl: './contract-form-dialog.scss',
 })
@@ -51,7 +51,7 @@ export class ContractFormDialogComponent implements OnInit {
     installmentsQty: [1, [Validators.required, Validators.min(1)]],
     contractDate: [new Date().toISOString().substring(0, 10), Validators.required],
     notes: [''],
-    
+
     generateTransaction: [false],
     firstDueDate: [''],
     intervalDays: [30]
@@ -60,13 +60,61 @@ export class ContractFormDialogComponent implements OnInit {
   ngOnInit() {
     this.loadDependencies();
     this.setupFormListeners();
+
+    if (
+      this.data?.contract
+    ) {
+      const contract =
+        this.data.contract;
+
+      this.form.patchValue({
+        clientId:
+          contract.clientId,
+
+        productServiceId:
+          contract.productServiceId,
+
+        quantity:
+          contract.quantity,
+
+        paymentMethod:
+          contract.paymentMethod,
+
+        installmentsQty:
+          contract.installmentsQty,
+
+        contractDate:
+          new Date(
+            contract.contractDate
+          )
+            .toISOString()
+            .substring(
+              0,
+              10
+            ),
+      });
+    }
+  }
+
+
+
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      contract?: Contract;
+    }
+  ) { }
+
+  get isEditing() {
+    return !!this.data?.contract;
   }
 
   loadDependencies() {
     // Busca apenas clientes e produtos ativos para popular os selects
     // Nota: Em um sistema muito grande, idealmente usaríamos um select com autocomplete buscando da API
     this.loadingData.set(true);
-    
+
     Promise.all([
       this.clientsService.list({ perPage: 100, active: true }).toPromise(),
       this.productsService.list({ perPage: 100, active: true }).toPromise()
@@ -113,43 +161,154 @@ export class ContractFormDialogComponent implements OnInit {
   }
 
   submit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
 
-    this.saving.set(true);
-    const raw = this.form.getRawValue();
+  const raw = this.form.getRawValue();
 
-    // Validação extra por segurança
-    if (raw.paymentMethod === 'INSTALLMENT' && raw.installmentsQty < 2) {
-      this.feedback.error('Pagamento a prazo exige no mínimo 2 parcelas.');
-      this.saving.set(false);
-      return;
-    }
+  // =====================================================
+  // VALIDAÇÕES
+  // =====================================================
 
-    const payload: CreateContractDto = {
-      clientId: raw.clientId,
-      productServiceId: raw.productServiceId,
-      quantity: raw.quantity,
-      paymentMethod: raw.paymentMethod,
-      installmentsQty: raw.installmentsQty,
-      contractDate: new Date(raw.contractDate).toISOString(),
-      notes: raw.notes || undefined,
-      generateTransaction: raw.generateTransaction,
-      firstDueDate: raw.generateTransaction && raw.firstDueDate ? new Date(raw.firstDueDate).toISOString() : undefined,
-      intervalDays: raw.generateTransaction ? raw.intervalDays : undefined,
+  if (
+    raw.paymentMethod === 'INSTALLMENT' &&
+    raw.installmentsQty < 2
+  ) {
+    this.feedback.error(
+      'Pagamento a prazo exige no mínimo 2 parcelas.'
+    );
+    return;
+  }
+
+  if (
+    raw.paymentMethod === 'CASH' &&
+    raw.installmentsQty !== 1
+  ) {
+    this.feedback.error(
+      'Pagamento à vista deve possuir apenas 1 parcela.'
+    );
+    return;
+  }
+
+  this.saving.set(true);
+
+  // =====================================================
+  // DADOS COMUNS
+  // =====================================================
+
+  const commonPayload = {
+    clientId: raw.clientId,
+
+    productServiceId:
+      raw.productServiceId,
+
+    quantity:
+      raw.quantity,
+
+    paymentMethod:
+      raw.paymentMethod,
+
+    installmentsQty:
+      raw.paymentMethod === 'CASH'
+        ? 1
+        : raw.installmentsQty,
+
+    contractDate:
+      new Date(
+        raw.contractDate
+      ).toISOString(),
+  };
+
+  // =====================================================
+  // EDIÇÃO
+  // =====================================================
+
+  if (
+    this.isEditing &&
+    this.data.contract
+  ) {
+    const payload:
+      UpdateContractDto = {
+        ...commonPayload,
+      };
+
+    this.contractsService
+      .update(
+        this.data.contract.id,
+        payload
+      )
+      .subscribe({
+        next: (contract) => {
+          this.saving.set(false);
+
+          this.dialogRef.close(
+            contract
+          );
+        },
+
+        error: (err) => {
+          this.saving.set(false);
+
+          this.feedback.error(
+            err?.error?.message ||
+            'Erro ao atualizar venda.'
+          );
+        },
+      });
+
+    return;
+  }
+
+  // =====================================================
+  // CRIAÇÃO
+  // =====================================================
+
+  const payload:
+    CreateContractDto = {
+      ...commonPayload,
+
+      notes:
+        raw.notes ||
+        undefined,
+
+      generateTransaction:
+        raw.generateTransaction,
+
+      firstDueDate:
+        raw.generateTransaction &&
+        raw.firstDueDate
+          ? new Date(
+              raw.firstDueDate
+            ).toISOString()
+          : undefined,
+
+      intervalDays:
+        raw.generateTransaction
+          ? raw.intervalDays
+          : undefined,
     };
 
-    this.contractsService.create(payload).subscribe({
+  this.contractsService
+    .create(payload)
+    .subscribe({
       next: (contract) => {
         this.saving.set(false);
-        this.dialogRef.close(contract);
+
+        this.dialogRef.close(
+          contract
+        );
       },
+
       error: (err) => {
         this.saving.set(false);
-        this.feedback.error(err?.error?.message || 'Erro ao registrar venda.');
+
+        this.feedback.error(
+          err?.error?.message ||
+          'Erro ao registrar venda.'
+        );
       },
     });
-  }
+}
 }

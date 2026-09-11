@@ -24,16 +24,18 @@
 // ─── LAYOUT DA AGENDA (SPLIT VIEW) ─────────────────────────────────────
 .agenda-layout {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 2rem;
+
+  grid-template-columns:
+    360px minmax(0, 1fr);
+
+  gap: 1.5rem;
+
   align-items: start;
 
   @media (max-width: 992px) {
-    grid-template-columns: 1fr; // Empilha no tablet/celular
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
   }
 }
-
 // ─── COLUNA ESQUERDA: CALENDÁRIO ELITE ─────────────────────────────────
 .saas-card {
   background: var(--n8-surface);
@@ -237,3 +239,644 @@
 .text-muted { color: var(--n8-text-muted) !important; }
 .font-medium { font-weight: 500; }
 .font-bold { font-weight: 700; }
+
+// ============================================================
+// NOVO CARD DO CALENDÁRIO
+// ============================================================
+
+.calendar-card {
+  background: var(--n8-surface);
+
+  border:
+    1px solid rgba(16, 24, 40, 0.07);
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 1px 3px rgba(16, 24, 40, 0.05);
+
+  overflow: hidden;
+
+
+  &__top {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+      1rem 1.25rem 0;
+
+
+    > div {
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 2px;
+    }
+
+
+    strong {
+      color:
+        var(--n8-text-primary);
+
+      font-size:
+        0.92rem;
+    }
+  }
+}
+
+
+.calendar-label {
+  color:
+    var(--n8-text-muted);
+
+  font-size:
+    0.68rem;
+
+  font-weight:
+    700;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.06em;
+}
+
+
+.today-btn {
+  height: 30px;
+
+  padding:
+    0 10px;
+
+  color:
+    var(--n8-primary);
+
+  background:
+    var(--n8-blue-subtle);
+
+  border:
+    0;
+
+  border-radius:
+    7px;
+
+  font-size:
+    0.74rem;
+
+  font-weight:
+    700;
+
+  cursor:
+    pointer;
+
+
+  &:hover {
+    filter:
+      brightness(0.97);
+  }
+}
+
+
+// ============================================================
+// CALENDÁRIO
+// ============================================================
+
+::ng-deep .elite-calendar {
+
+  .mat-calendar-header {
+    padding:
+      8px 12px 0;
+  }
+
+
+  .mat-calendar-content {
+    padding:
+      0 12px 10px;
+  }
+
+
+  .mat-calendar-controls {
+    margin:
+      4px 0;
+  }
+
+
+  .mat-calendar-period-button {
+    color:
+      var(--n8-text-primary);
+
+    font-family:
+      var(--n8-font);
+
+    font-size:
+      0.82rem;
+
+    font-weight:
+      700;
+  }
+
+
+  .mat-calendar-table-header {
+
+    th {
+      color:
+        var(--n8-text-muted);
+
+      font-size:
+        0.65rem;
+
+      font-weight:
+        700;
+
+      text-transform:
+        uppercase;
+    }
+
+
+    &-divider::after {
+      display:
+        none;
+    }
+  }
+
+
+  .mat-calendar-body-label {
+    visibility:
+      hidden;
+
+    height:
+      4px;
+  }
+
+
+  .mat-calendar-body-cell {
+    position:
+      relative;
+  }
+
+
+  .mat-calendar-body-cell-content {
+    width:
+      34px;
+
+    height:
+      34px;
+
+    border:
+      none !important;
+
+    border-radius:
+      9px !important;
+
+    color:
+      var(--n8-text-secondary);
+
+    font-family:
+      var(--n8-font);
+
+    font-size:
+      0.8rem;
+
+    font-weight:
+      600;
+
+    transition:
+      background 0.15s ease;
+  }
+
+
+  .mat-calendar-body-cell:hover
+  .mat-calendar-body-cell-content {
+    background:
+      var(--n8-surface-2);
+  }
+
+
+  // HOJE
+  .mat-calendar-body-today:not(
+    .mat-calendar-body-selected
+  ) {
+    color:
+      var(--n8-primary);
+
+    background:
+      var(--n8-blue-subtle);
+
+    border:
+      none;
+  }
+
+
+  // SELECIONADO
+.mat-calendar-body-selected {
+  color: var(--n8-primary) !important;
+
+  background: #eef4ff !important;
+
+  border: 2px solid var(--n8-primary) !important;
+
+  font-weight: 800 !important;
+
+  box-shadow:
+    0 0 0 2px rgba(10, 46, 140, 0.06) !important;
+}
+
+.mat-calendar-body-selected {
+  span,
+  .mat-calendar-body-cell-content {
+    color: var(--n8-primary) !important;
+  }
+}
+
+  // =========================================================
+  // MARCADORES
+  // =========================================================
+
+  .calendar-day-overdue,
+  .calendar-day-pending,
+  .calendar-day-done,
+  .calendar-day-task {
+
+    .mat-calendar-body-cell-content {
+
+      &::after {
+        content: '';
+
+        position:
+          absolute;
+
+        left:
+          50%;
+
+        bottom:
+          1px;
+
+        width:
+          5px;
+
+        height:
+          5px;
+
+        border-radius:
+          50%;
+
+        transform:
+          translateX(-50%);
+      }
+    }
+  }
+
+
+  // ATRASADA
+  .calendar-day-overdue {
+
+    .mat-calendar-body-cell-content {
+      color:
+        #dc2626;
+
+      background:
+        #fef2f2;
+
+
+      &::after {
+        background:
+          #dc2626;
+      }
+    }
+  }
+
+
+  // PENDENTE
+  .calendar-day-pending {
+
+    .mat-calendar-body-cell-content {
+      color:
+        #b45309;
+
+      background:
+        #fffbeb;
+
+
+      &::after {
+        background:
+          #f59e0b;
+      }
+    }
+  }
+
+
+  // CONCLUÍDA
+  .calendar-day-done {
+
+    .mat-calendar-body-cell-content {
+      color:
+        #047857;
+
+      background:
+        #ecfdf5;
+
+
+      &::after {
+        background:
+          #059669;
+      }
+    }
+  }
+
+
+  // Selected sempre ganha
+  .mat-calendar-body-selected {
+
+    &::after {
+      background:
+        #ffffff !important;
+    }
+  }
+}
+
+
+// ============================================================
+// LEGENDA
+// ============================================================
+
+.calendar-legend {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  padding:
+    0 1rem 1rem;
+
+  color:
+    var(--n8-text-muted);
+
+  font-size:
+    0.68rem;
+
+
+  > div {
+    display:
+      flex;
+
+    align-items:
+      center;
+
+    gap:
+      5px;
+  }
+}
+
+
+.legend-dot {
+  width:
+    7px;
+
+  height:
+    7px;
+
+  border-radius:
+    50%;
+
+
+  &--overdue {
+    background:
+      #dc2626;
+  }
+
+
+  &--pending {
+    background:
+      #f59e0b;
+  }
+
+
+  &--done {
+    background:
+      #059669;
+  }
+}
+
+
+// ============================================================
+// RESUMO DO CALENDÁRIO
+// ============================================================
+
+.calendar-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  border-top:
+    1px solid var(--n8-divider);
+
+
+  > div {
+    display:
+      flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 2px;
+
+    padding:
+      0.9rem 0.5rem;
+
+
+    &:not(:last-child) {
+      border-right:
+        1px solid var(--n8-divider);
+    }
+  }
+
+
+  strong {
+    color:
+      var(--n8-text-primary);
+
+    font-size:
+      1rem;
+
+    font-weight:
+      800;
+  }
+
+
+  span {
+    color:
+      var(--n8-text-muted);
+
+    font-size:
+      0.65rem;
+  }
+}
+
+
+// ============================================================
+// PAINEL DIREITO
+// ============================================================
+
+.agenda-panel {
+  min-height:
+    440px;
+
+  padding:
+    1.25rem;
+
+  background:
+    var(--n8-surface);
+
+  border:
+    1px solid rgba(16, 24, 40, 0.06);
+
+  border-radius:
+    16px;
+
+  box-shadow:
+    0 1px 3px rgba(16, 24, 40, 0.04);
+}
+
+
+.agenda-content-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap:
+    1rem;
+
+  margin-bottom:
+    1.25rem;
+
+  padding-bottom:
+    1rem;
+
+  border-bottom:
+    1px solid var(--n8-divider);
+
+
+  h2 {
+    margin:
+      2px 0 0;
+  }
+}
+
+
+.agenda-date-caption {
+  color:
+    var(--n8-primary);
+
+  font-size:
+    0.7rem;
+
+  font-weight:
+    700;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.05em;
+}
+
+
+// ============================================================
+// TAREFAS
+// ============================================================
+
+.task-card {
+
+  &--overdue {
+    border-color:
+      rgba(220, 38, 38, 0.14);
+
+    background:
+      linear-gradient(
+        90deg,
+        rgba(254, 242, 242, 0.55),
+        var(--n8-surface) 25%
+      );
+  }
+}
+
+
+.task-header {
+  display:
+    flex;
+
+  align-items:
+    flex-start;
+
+  justify-content:
+    space-between;
+
+  gap:
+    1rem;
+}
+
+
+.task-title-group {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    8px;
+
+  min-width:
+    0;
+}
+
+
+.overdue-label {
+  padding:
+    3px 7px;
+
+  flex-shrink:
+    0;
+
+  color:
+    #dc2626;
+
+  background:
+    #fef2f2;
+
+  border-radius:
+    999px;
+
+  font-size:
+    0.65rem;
+
+  font-weight:
+    700;
+}
+
+
+.task-footer {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  flex-wrap:
+    wrap;
+
+  gap:
+    1rem;
+
+  margin-top:
+    0.65rem;
+}

@@ -11,6 +11,24 @@ import {
 import { PaginatedResponse } from '../models/pagination.model';
 import { environment } from '../environments/environment';
 
+export interface UpdateTransactionDto {
+  type: 'INCOME' | 'EXPENSE';
+
+  description: string;
+
+  totalValue: number;
+
+  clientId?: string | null;
+
+  paymentMethod:
+  | 'CASH'
+  | 'INSTALLMENT';
+
+  installmentsQty: number;
+
+  dueDate: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {
   private http = inject(HttpClient);
@@ -34,12 +52,23 @@ export class TransactionsService {
     return this.http.post<Transaction>(this.baseUrl, data);
   }
 
- cancel(id: string): Observable<{ message: string }> {
-  return this.http.patch<{ message: string }>(`${this.baseUrl}/${id}/cancel`, {});
-}
+  cancel(id: string): Observable<{ message: string }> {
+    return this.http.patch<{ message: string }>(`${this.baseUrl}/${id}/cancel`, {});
+  }
 
   // Novo endpoint focado apenas em dar baixa na parcela
   payInstallment(installmentId: string, data: PayInstallmentDto): Observable<any> {
     return this.http.patch(`${this.baseUrl}/installments/${installmentId}/pay`, data);
+  }
+
+  update(
+    id: string,
+    data: UpdateTransactionDto
+  ): Observable<Transaction> {
+
+    return this.http.patch<Transaction>(
+      `${this.baseUrl}/${id}`,
+      data
+    );
   }
 }

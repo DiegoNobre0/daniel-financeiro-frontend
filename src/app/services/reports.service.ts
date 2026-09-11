@@ -32,9 +32,17 @@ export class ReportsService {
     return this.http.get<Models.CashFlowResponse>(`${this.apiUrl}/reports/cash-flow`, { params: this.buildParams(query) });
   }
 
-  getOverdue(): Observable<Models.OverdueReportResponse> {
-    return this.http.get<Models.OverdueReportResponse>(`${this.apiUrl}/reports/overdue`);
-  }
+getOverdue(
+  query?: Models.PeriodQuery
+): Observable<Models.OverdueReportResponse> {
+
+  return this.http.get<Models.OverdueReportResponse>(
+    `${this.apiUrl}/reports/overdue`,
+    {
+      params: this.buildParams(query)
+    }
+  );
+}
 
   getRevenueByClient(query: Models.PeriodQuery & Models.PaginationQuery): Observable<Models.RevenueByClientResponse> {
     return this.http.get<Models.RevenueByClientResponse>(`${this.apiUrl}/reports/revenue-by-client`, { params: this.buildParams(query) });

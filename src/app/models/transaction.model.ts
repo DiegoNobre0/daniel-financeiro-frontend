@@ -44,7 +44,18 @@ export interface PayInstallmentDto {
 export interface ListTransactionsQuery {
   page?: number;
   perPage?: number;
+
   type?: 'INCOME' | 'EXPENSE';
-  status?: string;
+
+  status?:
+    | 'PENDING'
+    | 'PARTIALLY_PAID'
+    | 'PAID'
+    | 'OVERDUE'
+    | 'CANCELED';
+
   clientId?: string;
+
+  startDate?: string;
+  endDate?: string;
 }

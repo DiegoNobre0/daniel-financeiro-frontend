@@ -1,49 +1,175 @@
 <!-- HEADER: TÍTULO E AÇÕES PRINCIPAIS -->
-<div class="elite-page-header n8-flex n8-justify-between n8-align-center n8-mb-6">
-  <div>
-    <h1 class="n8-heading-xl">Financeiro</h1>
-    <p class="n8-body n8-text-muted">Gestão centralizada de contas a pagar e a receber.</p>
-  </div>
-
-  <div class="header-actions n8-flex n8-gap-3">
-    <button class="n8-btn n8-btn--danger-light" (click)="openCreateDialog('EXPENSE')">
-      <lucide-icon name="arrow-down-circle" [size]="18"></lucide-icon>
-      <span>Nova Despesa</span>
-    </button>
-    <button class="n8-btn n8-btn--success" (click)="openCreateDialog('INCOME')">
-      <lucide-icon name="arrow-up-circle" [size]="18"></lucide-icon>
-      <span>Nova Receita</span>
-    </button>
-  </div>
-</div>
-
 <!-- CONTROLES: FILTROS -->
 <div class="elite-controls-bar n8-mb-6">
-  <div class="elite-filters w-full n8-flex n8-justify-end">
 
-    <mat-form-field class="n8-mat-select-filter" subscriptSizing="dynamic" appearance="outline">
-      <mat-select [ngModel]="typeFilter()" (ngModelChange)="onTypeFilterChange($event)" panelClass="n8-select-panel"
-        placeholder="Tipo de Movimentação">
-        <mat-option value="ALL">Todas Movimentações</mat-option>
-        <mat-option value="INCOME">Apenas Receitas (+)</mat-option>
-        <mat-option value="EXPENSE">Apenas Despesas (-)</mat-option>
+  <div class="elite-filters">
+
+    <!-- INTERVALO DE DATAS -->
+    <div class="filter-group filter-group--dates">
+
+      <mat-form-field
+        class="n8-mat-select-filter date-filter"
+        subscriptSizing="dynamic"
+        appearance="outline"
+      >
+        <input
+          matInput
+          [matDatepicker]="pickerStart"
+          [ngModel]="startDate()"
+          (ngModelChange)="startDate.set($event)"
+          placeholder="Data inicial"
+          readonly
+          (click)="pickerStart.open()"
+        >
+
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="pickerStart"
+        ></mat-datepicker-toggle>
+
+        <mat-datepicker
+          #pickerStart
+          panelClass="n8-datepicker-panel"
+        ></mat-datepicker>
+      </mat-form-field>
+
+
+      <span class="date-separator">
+        até
+      </span>
+
+
+      <mat-form-field
+        class="n8-mat-select-filter date-filter"
+        subscriptSizing="dynamic"
+        appearance="outline"
+      >
+        <input
+          matInput
+          [matDatepicker]="pickerEnd"
+          [ngModel]="endDate()"
+          (ngModelChange)="endDate.set($event)"
+          placeholder="Data final"
+          readonly
+          (click)="pickerEnd.open()"
+        >
+
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="pickerEnd"
+        ></mat-datepicker-toggle>
+
+        <mat-datepicker
+          #pickerEnd
+          panelClass="n8-datepicker-panel"
+        ></mat-datepicker>
+      </mat-form-field>
+
+    </div>
+
+
+    <!-- TIPO -->
+    <mat-form-field
+      class="n8-mat-select-filter movement-filter"
+      subscriptSizing="dynamic"
+      appearance="outline"
+    >
+      <mat-select
+        [ngModel]="typeFilter()"
+        (ngModelChange)="onTypeFilterChange($event)"
+        panelClass="n8-select-panel"
+      >
+        <mat-option value="ALL">
+          Todas Movimentações
+        </mat-option>
+
+        <mat-option value="INCOME">
+          Apenas Receitas (+)
+        </mat-option>
+
+        <mat-option value="EXPENSE">
+          Apenas Despesas (-)
+        </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field class="n8-mat-select-filter" subscriptSizing="dynamic" appearance="outline">
-      <mat-select [ngModel]="statusFilter()" (ngModelChange)="onStatusFilterChange($event)" panelClass="n8-select-panel"
-        placeholder="Status">
-        <mat-option value="ALL">Todos os Status</mat-option>
-        <mat-option value="PENDING">Pendente</mat-option>
-        <mat-option value="PARTIALLY_PAID">Parcialmente Pago</mat-option>
-        <mat-option value="PAID">Pago</mat-option>
-        <mat-option value="OVERDUE">Atrasado</mat-option>
-        <mat-option value="CANCELED">Cancelado</mat-option>
+
+    <!-- STATUS -->
+    <mat-form-field
+      class="n8-mat-select-filter status-filter"
+      subscriptSizing="dynamic"
+      appearance="outline"
+    >
+      <mat-select
+        [ngModel]="statusFilter()"
+        (ngModelChange)="onStatusFilterChange($event)"
+        panelClass="n8-select-panel"
+      >
+        <mat-option value="ALL">
+          Todos os Status
+        </mat-option>
+
+        <mat-option value="PENDING">
+          Pendente
+        </mat-option>
+
+        <mat-option value="PARTIALLY_PAID">
+          Parcialmente Pago
+        </mat-option>
+
+        <mat-option value="PAID">
+          Pago
+        </mat-option>
+
+        <mat-option value="OVERDUE">
+          Atrasado
+        </mat-option>
+
+        <mat-option value="CANCELED">
+          Cancelado
+        </mat-option>
       </mat-select>
     </mat-form-field>
+
+
+    <!-- AÇÕES -->
+    <div class="filter-actions">
+
+      <button
+        type="button"
+        class="filter-clear-btn"
+        (click)="clearDateFilter()"
+        [disabled]="!startDate() && !endDate()"
+        title="Limpar filtro de datas"
+      >
+        <lucide-icon
+          name="x"
+          [size]="15"
+        ></lucide-icon>
+
+        Limpar
+      </button>
+
+
+      <button
+        type="button"
+        class="filter-apply-btn"
+        (click)="applyDateFilter()"
+      >
+        <lucide-icon
+          name="filter"
+          [size]="16"
+        ></lucide-icon>
+
+        Filtrar
+      </button>
+
+    </div>
 
   </div>
+
 </div>
+
 
 <!-- CONTEÚDO: TABELA ELITE -->
 <div class="saas-card saas-card--table">
@@ -105,33 +231,102 @@
 
           <!-- transactions.html -->
           <td data-label="Status" class="n8-text-center">
-            <div class="n8-flex n8-align-center n8-gap-2 n8-justify-center">
-              @switch (tx.status) {
-              @case ('PAID') { <span class="badge-success">Pago</span> }
-              @case ('PENDING') { <span class="badge-warning">Pendente</span> }
-              @case ('OVERDUE') { <span class="badge-danger">Atrasado</span> }
-              @case ('PARTIALLY_PAID') { <span class="badge-info">Parcial</span> }
-              @case ('CANCELED') { <span class="badge-neutral">Cancelado</span> }
-              }
+            <div class="
+      n8-flex
+      n8-align-center
+      n8-gap-2
+      n8-justify-center
+    ">
 
-              @if (hasOverdueInstallment(tx) && tx.status !== 'OVERDUE') {
-              <span class="badge-danger" title="Existe parcela atrasada">
-                <lucide-icon name="alert-triangle" [size]="12"></lucide-icon>
+              @switch (tx.status) {
+
+              @case ('PAID') {
+              <span class="badge-success">
+                Pago
               </span>
               }
+
+              @case ('PENDING') {
+              <span class="badge-warning">
+                Pendente
+              </span>
+              }
+
+              @case ('OVERDUE') {
+              <span class="badge-danger">
+                Atrasado
+              </span>
+              }
+
+              @case ('PARTIALLY_PAID') {
+              <span class="badge-info">
+                Parcial
+              </span>
+              }
+
+              @case ('CANCELED') {
+              <span class="badge-neutral">
+                Cancelado
+              </span>
+              }
+
+              }
+
+              @if (
+              hasOverdueInstallment(tx) &&
+              tx.status !== 'CANCELED'
+              ) {
+
+              <span class="badge-danger" title="Existe parcela vencida">
+                <lucide-icon name="alert-triangle" [size]="12"></lucide-icon>
+              </span>
+
+              }
+
             </div>
           </td>
 
           <td data-label="Ações" class="n8-text-right">
-            <div class="n8-flex n8-gap-2 n8-justify-end">
+            <div class="
+      n8-flex
+      n8-gap-2
+      n8-justify-end
+    ">
+
+              <!-- DETALHES -->
               <button class="btn-action-ghost" (click)="manageInstallments(tx)" [disabled]="tx.status === 'CANCELED'">
                 Detalhes
               </button>
-              @if (tx.status !== 'CANCELED' && tx.status !== 'PAID') {
-              <button class="btn-icon-danger" title="Cancelar" (click)="cancelTransaction(tx)">
+
+
+              <!-- EDITAR -->
+              <button class="btn-icon-outline" title="Editar lançamento" (click)="openEditDialog(tx)" [disabled]="
+  !!tx.contractId ||
+  tx.status === 'PAID' ||
+  tx.status === 'PARTIALLY_PAID' ||
+  tx.status === 'CANCELED'
+">
+                <lucide-icon name="pencil" [size]="16"></lucide-icon>
+              </button>
+
+
+              <!-- CANCELAR -->
+              <button class="btn-icon-danger" [title]="
+        tx.contractId
+          ? 'Lançamento vinculado a uma venda. Cancele pela venda.'
+          : tx.status === 'PAID'
+            ? 'Lançamento pago não pode ser cancelado diretamente.'
+            : tx.status === 'CANCELED'
+              ? 'Lançamento já cancelado.'
+              : 'Cancelar lançamento'
+      " [disabled]="
+        !!tx.contractId ||
+        tx.status === 'PAID' ||
+        tx.status === 'CANCELED'
+      " (click)="cancelTransaction(tx)">
                 <lucide-icon name="ban" [size]="16"></lucide-icon>
               </button>
-              }
+
             </div>
           </td>
         </tr>

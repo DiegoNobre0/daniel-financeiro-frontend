@@ -21,56 +21,45 @@
 }
 
 .elite-controls-bar {
-  display: flex;
-  justify-content: flex-end;
+  width: 100%;
   padding-bottom: 1rem;
-  
-  .elite-filters {
-    display: flex;
-    gap: 1rem;
-
-    @media (max-width: 600px) {
-      flex-direction: column;
-      width: 100%;
-      .n8-mat-select-filter { width: 100%; }
-    }
-  }
 }
+
+.elite-filters {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+}
+
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-group--dates {
+  flex-shrink: 0;
+}
+
+.date-separator {
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  color: var(--n8-text-muted);
+
+  user-select: none;
+}
+
 
 // ─── ANGULAR MATERIAL OVERRIDES (Padrão Elite) ─────────────────────────
-::ng-deep .n8-mat-select-filter {
-  width: 220px;
-
-  .mat-mdc-text-field-wrapper {
-    background-color: var(--n8-surface) !important;
-    border-radius: var(--n8-radius-md) !important;
-    height: 42px !important;
-    padding: 0 8px !important;
-  }
-  
-  .mdc-notched-outline__leading,
-  .mdc-notched-outline__notch,
-  .mdc-notched-outline__trailing { border-color: var(--n8-border) !important; }
-
-  &:hover .mdc-notched-outline__leading,
-  &:hover .mdc-notched-outline__notch,
-  &:hover .mdc-notched-outline__trailing { border-color: var(--n8-blue-subtle) !important; }
-
-  &.mat-focused .mdc-notched-outline__leading,
-  &.mat-focused .mdc-notched-outline__notch,
-  &.mat-focused .mdc-notched-outline__trailing {
-    border-width: 1px !important;
-    border-color: var(--n8-blue) !important;
-  }
-
-  .mat-mdc-select-value-text, .mat-mdc-input-element {
-    font-family: var(--n8-font);
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--n8-text-secondary);
-  }
-}
-
+::ng-deep .n8-mat-select-filter
 // ─── CARDS E TABELAS PREMIUM ───────────────────────────────────────────
 .saas-card {
   background: var(--n8-surface);
@@ -183,6 +172,173 @@
     }
   }
 }
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+
+// LIMPAR
+
+.filter-clear-btn {
+  height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 0 12px;
+
+  border: 1px solid transparent;
+
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: var(--n8-text-muted);
+
+  font-family: var(--n8-font);
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    color: var(--n8-text-secondary);
+
+    background: var(--n8-surface);
+
+    border-color: var(--n8-border);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+
+// FILTRAR
+
+.filter-apply-btn {
+  height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 18px;
+
+  border: 0;
+
+  border-radius: 8px;
+
+  background: var(--n8-blue);
+
+  color: #fff;
+
+  font-family: var(--n8-font);
+  font-size: 0.84rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.08);
+
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    filter: brightness(0.94);
+
+    box-shadow:
+      0 3px 8px rgba(16, 24, 40, 0.12);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+
+@media (max-width: 1200px) {
+
+  .elite-filters {
+    justify-content: flex-start;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .elite-filters {
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 10px;
+  }
+
+  .filter-group--dates {
+    width: 100%;
+  }
+
+  ::ng-deep .date-filter {
+    flex: 1;
+    width: auto;
+  }
+
+  ::ng-deep .movement-filter,
+  ::ng-deep .status-filter {
+    width: 100%;
+  }
+
+  .filter-actions {
+    width: 100%;
+  }
+
+  .filter-clear-btn,
+  .filter-apply-btn {
+    flex: 1;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .filter-group--dates {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-separator {
+    display: none;
+  }
+
+  ::ng-deep .date-filter {
+    width: 100%;
+  }
+
+}
+
 
 // ─── PAGINAÇÃO ELITE ───────────────────────────────────────────────────
 .elite-pagination {

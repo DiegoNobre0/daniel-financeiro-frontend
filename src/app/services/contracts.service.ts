@@ -11,6 +11,9 @@ import {
 import { PaginatedResponse } from '../models/pagination.model';
 import { environment } from '../environments/environment';
 
+
+
+
 @Injectable({ providedIn: 'root' })
 export class ContractsService {
   private http = inject(HttpClient);
@@ -34,11 +37,18 @@ export class ContractsService {
     return this.http.post<Contract>(this.baseUrl, data);
   }
 
-  update(id: string, data: UpdateContractDto): Observable<Contract> {
-    return this.http.patch<Contract>(`${this.baseUrl}/${id}`, data); // Note que no backend usamos PATCH
+  update(
+    id: string,
+    data: UpdateContractDto
+  ): Observable<Contract> {
+
+    return this.http.patch<Contract>(
+      `${this.baseUrl}/${id}`,
+      data
+    );
   }
 
   cancel(id: string): Observable<{ message: string }> {
-  return this.http.patch<{ message: string }>(`${this.baseUrl}/${id}/cancel`, {});
-}
+    return this.http.patch<{ message: string }>(`${this.baseUrl}/${id}/cancel`, {});
+  }
 }

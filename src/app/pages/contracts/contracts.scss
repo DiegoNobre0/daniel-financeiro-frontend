@@ -290,3 +290,287 @@
 .text-muted { color: var(--n8-text-muted) !important; }
 .font-medium { font-weight: 500; }
 .font-bold { font-weight: 700; }
+
+
+// ─────────────────────────────────────────────────────────────
+// BARRA DE FILTROS
+// ─────────────────────────────────────────────────────────────
+
+.elite-controls-bar {
+  width: 100%;
+  padding: 0;
+  margin-bottom: 1.5rem;
+}
+
+.elite-filters {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// SEPARADOR ENTRE DATAS
+// ─────────────────────────────────────────────────────────────
+
+.date-separator {
+  flex-shrink: 0;
+
+  font-size: 0.82rem;
+  font-weight: 600;
+
+  color: var(--n8-text-muted);
+
+  padding: 0 2px;
+
+  user-select: none;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// ANGULAR MATERIAL - FILTROS
+// ─────────────────────────────────────────────────────────────
+
+::ng-deep .n8-mat-select-filter {
+  width: 220px;
+  margin: 0 !important;
+
+  .mat-mdc-text-field-wrapper {
+    height: 44px !important;
+
+    padding: 0 10px !important;
+
+    background: var(--n8-surface) !important;
+
+    border-radius: 10px !important;
+  }
+
+  .mat-mdc-form-field-flex {
+    height: 44px !important;
+
+    align-items: center !important;
+  }
+
+  .mat-mdc-form-field-infix {
+    min-height: 44px !important;
+
+    padding-top: 10px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+  }
+
+  .mdc-notched-outline__leading {
+    border-top-left-radius: 10px !important;
+    border-bottom-left-radius: 10px !important;
+
+    border-color: var(--n8-border) !important;
+  }
+
+  .mdc-notched-outline__notch {
+    border-color: var(--n8-border) !important;
+  }
+
+  .mdc-notched-outline__trailing {
+    border-top-right-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+
+    border-color: var(--n8-border) !important;
+  }
+
+  &:hover {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: #94a3b8 !important;
+    }
+  }
+
+  &.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-width: 1px !important;
+      border-color: var(--n8-blue) !important;
+    }
+  }
+
+  .mat-mdc-select-value-text,
+  .mat-mdc-input-element {
+    font-family: var(--n8-font);
+
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    color: var(--n8-text-secondary);
+  }
+
+  .mat-datepicker-toggle {
+    color: var(--n8-text-secondary);
+  }
+
+  .mat-mdc-select-arrow {
+    color: var(--n8-text-muted);
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// CAMPOS DE DATA
+// ─────────────────────────────────────────────────────────────
+
+::ng-deep .date-filter {
+  width: 220px;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// BOTÃO LIMPAR
+// ─────────────────────────────────────────────────────────────
+
+.filter-clear-btn {
+  height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 0 12px;
+
+  background: transparent;
+
+  border: 1px solid transparent;
+
+  border-radius: 9px;
+
+  color: var(--n8-text-muted);
+
+  font-family: var(--n8-font);
+  font-size: 0.82rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--n8-surface);
+
+    border-color: var(--n8-border);
+
+    color: var(--n8-text-primary);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// BOTÃO FILTRAR
+// ─────────────────────────────────────────────────────────────
+
+.filter-apply-btn {
+  height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 16px;
+
+  border: none;
+
+  border-radius: 9px;
+
+  background: #0A2E8C;
+
+  color: #ffffff;
+
+  font-family: var(--n8-font);
+  font-size: 0.84rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 1px 2px rgba(16, 24, 40, 0.08);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
+
+  &:hover {
+    filter: brightness(0.95);
+
+    box-shadow:
+      0 4px 8px rgba(16, 24, 40, 0.12);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// RESPONSIVO
+// ─────────────────────────────────────────────────────────────
+
+@media (max-width: 1100px) {
+
+  .elite-filters {
+    justify-content: flex-start;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .elite-filters {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 10px;
+  }
+
+  .date-separator {
+    display: none;
+  }
+
+  ::ng-deep .n8-mat-select-filter,
+  ::ng-deep .date-filter {
+    width: 100%;
+  }
+
+  .filter-clear-btn,
+  .filter-apply-btn {
+    width: 100%;
+
+    justify-content: center;
+  }
+}

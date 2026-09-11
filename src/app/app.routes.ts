@@ -9,7 +9,7 @@ export const routes: Routes = [
     path: 'login',
     title: 'Login',
     // Dica: verifique se o arquivo chama apenas 'login' ou 'login.component'
-    loadComponent: () => import('./pages/login/login').then(m => m.LoginComponent) 
+    loadComponent: () => import('./pages/login/login').then(m => m.LoginComponent)
   },
 
   // ----------------------------------------------------
@@ -61,6 +61,18 @@ export const routes: Routes = [
         path: 'financeiro',
         title: 'Financeiro',
         loadComponent: () => import('./pages/transactions/transactions').then(m => m.TransactionsListComponent)
+      },
+      {
+        path:
+          'clientes/:id',
+
+        loadComponent: () =>
+          import(
+            './pages/client-details/client-details'
+          ).then(
+            (m) =>
+              m.ClientDetailsComponent
+          ),
       }
     ]
   },
