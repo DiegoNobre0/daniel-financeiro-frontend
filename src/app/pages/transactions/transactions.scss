@@ -7,7 +7,11 @@
 
     .header-actions {
       width: 100%;
-      .n8-btn { flex: 1; justify-content: center; }
+
+      .n8-btn {
+        flex: 1;
+        justify-content: center;
+      }
     }
   }
 
@@ -59,18 +63,136 @@
 
 
 // ─── ANGULAR MATERIAL OVERRIDES (Padrão Elite) ─────────────────────────
-::ng-deep .n8-mat-select-filter
-// ─── CARDS E TABELAS PREMIUM ───────────────────────────────────────────
-.saas-card {
-  background: var(--n8-surface);
-  border-radius: 16px;
-  border: 1px solid rgba(16, 24, 40, 0.06);
-  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05), 0 1px 2px rgba(16, 24, 40, 0.03);
-  position: relative;
+// ─── ANGULAR MATERIAL OVERRIDES ────────────────────────────────────────
+::ng-deep .n8-mat-select-filter {
+  width: 210px;
+  margin: 0;
 
-  &--table {
-    padding: 0;
-    overflow: hidden;
+  .mat-mdc-text-field-wrapper {
+    height: 42px !important;
+    background: var(--n8-surface) !important;
+    border-radius: 9px !important;
+    padding: 0 10px !important;
+  }
+
+  .mat-mdc-form-field-flex {
+    height: 42px !important;
+    align-items: center !important;
+  }
+
+  .mat-mdc-form-field-infix {
+    min-height: 42px !important;
+    padding-top: 10px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+  }
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--n8-border) !important;
+  }
+
+  &.mat-focused {
+
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--n8-primary) !important;
+      border-width: 1px !important;
+    }
+  }
+
+  .mat-mdc-select-value-text,
+  .mat-mdc-input-element {
+    font-family: var(--n8-font);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--n8-text-secondary);
+  }
+}
+
+::ng-deep .date-filter {
+  width: 220px;
+}
+
+::ng-deep .movement-filter {
+  width: 220px;
+}
+
+::ng-deep .status-filter {
+  width: 190px;
+}
+
+// ─── CARDS E TABELAS PREMIUM ───────────────────────────────────────────
+.elite-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+
+  background: #ffffff;
+
+  thead {
+    background: #fafafa;
+    border-bottom: 1px solid var(--n8-border);
+
+    tr {
+      background: #fafafa;
+    }
+
+    th {
+      padding: 1.25rem 1.5rem;
+
+      font-size: 0.75rem;
+      font-weight: 700;
+
+      color: var(--n8-text-muted);
+
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    background: #ffffff;
+
+    tr {
+      background: #ffffff;
+
+      border-bottom:
+        1px solid var(--n8-divider);
+
+      transition:
+        background-color 0.15s ease;
+
+      &:hover {
+        background: #f8fafc;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    td {
+      padding: 1.25rem 1.5rem;
+
+      background: transparent;
+
+      font-size: 0.9rem;
+
+      color:
+        var(--n8-text-secondary);
+
+      vertical-align: middle;
+
+      white-space: nowrap;
+    }
   }
 }
 
@@ -87,7 +209,7 @@
   thead {
     background: rgba(16, 24, 40, 0.02);
     border-bottom: 1px solid var(--n8-border);
-    
+
     th {
       padding: 1.25rem 1.5rem;
       font-size: 0.75rem;
@@ -104,8 +226,13 @@
       border-bottom: 1px solid var(--n8-divider);
       transition: background 0.2s ease;
 
-      &:hover { background: var(--n8-surface-2); }
-      &:last-child { border-bottom: none; }
+      &:hover {
+        background: #f8fafc;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
     }
 
     td {
@@ -121,7 +248,9 @@
 // ─── MOBILE: TRANSFORMANDO TABELA EM CARDS ────────────────────────────
 @media (max-width: 992px) {
   .elite-table {
-    thead { display: none; }
+    thead {
+      display: none;
+    }
 
     tbody {
       tr {
@@ -156,8 +285,16 @@
         // Ajusta a exibição da Descrição (Primeira linha vira destaque)
         &[data-label="Descrição"] {
           margin-bottom: 0.5rem;
-          &::before { display: none; }
-          .n8-flex { width: 100%; font-weight: 700; font-size: 1rem; }
+
+          &::before {
+            display: none;
+          }
+
+          .n8-flex {
+            width: 100%;
+            font-weight: 700;
+            font-size: 1rem;
+          }
         }
 
         // Alinha os botões de ação
@@ -166,7 +303,10 @@
           padding-top: 1rem;
           border-top: 1px solid var(--n8-divider);
           justify-content: flex-end;
-          &::before { display: none; }
+
+          &::before {
+            display: none;
+          }
         }
       }
     }
@@ -343,8 +483,11 @@
 // ─── PAGINAÇÃO ELITE ───────────────────────────────────────────────────
 .elite-pagination {
   padding: 1rem 1.5rem;
-  background: var(--n8-surface);
-  border-top: 1px solid var(--n8-border);
+
+  background: #ffffff;
+
+  border-top:
+    1px solid var(--n8-border);
 
   @media (max-width: 600px) {
     flex-direction: column;
@@ -368,7 +511,11 @@
     background: var(--n8-surface-2);
     color: var(--n8-text-primary);
   }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .btn-icon-danger {
@@ -403,8 +550,14 @@
   border-radius: 6px;
   cursor: pointer;
 
-  &:hover:not(:disabled) { background: var(--n8-surface-2); }
-  &:disabled { opacity: 0.3; cursor: not-allowed; }
+  &:hover:not(:disabled) {
+    background: var(--n8-surface-2);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
 }
 
 // ─── ESTADOS (LOADING/VAZIO) E ÍCONES ──────────────────────────────────
@@ -437,23 +590,84 @@
   height: 28px;
   border-radius: 6px;
 
-  &.bg-success { background: rgba(5, 150, 105, 0.1); }
-  &.bg-danger { background: rgba(220, 38, 38, 0.1); }
+  &.bg-success {
+    background: rgba(5, 150, 105, 0.1);
+  }
+
+  &.bg-danger {
+    background: rgba(220, 38, 38, 0.1);
+  }
 }
 
 // ─── BADGES ────────────────────────────────────────────────────────────
-.badge-success { background: #ECFDF5; color: #059669; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-.badge-warning { background: #FFFBEB; color: #D97706; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-.badge-danger { background: #FEF2F2; color: #DC2626; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-.badge-info { background: #F0F9FF; color: #0284C7; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-.badge-neutral { background: var(--n8-surface-2); color: var(--n8-text-secondary); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+.badge-success {
+  background: #ECFDF5;
+  color: #059669;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
 
-.text-success { color: #059669 !important; }
-.text-danger { color: #DC2626 !important; }
-.text-muted { color: var(--n8-text-muted) !important; }
-.text-primary { color: var(--n8-primary) !important; }
-.font-medium { font-weight: 500; }
-.font-bold { font-weight: 700; }
+.badge-warning {
+  background: #FFFBEB;
+  color: #D97706;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge-danger {
+  background: #FEF2F2;
+  color: #DC2626;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge-info {
+  background: #F0F9FF;
+  color: #0284C7;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge-neutral {
+  background: var(--n8-surface-2);
+  color: var(--n8-text-secondary);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.text-success {
+  color: #059669 !important;
+}
+
+.text-danger {
+  color: #DC2626 !important;
+}
+
+.text-muted {
+  color: var(--n8-text-muted) !important;
+}
+
+.text-primary {
+  color: var(--n8-primary) !important;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-bold {
+  font-weight: 700;
+}
 
 
 // ─── BOTÕES DE AÇÃO DO HEADER ─────────────────────────────────────────

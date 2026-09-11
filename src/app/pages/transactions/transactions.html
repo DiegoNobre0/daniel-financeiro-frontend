@@ -1,4 +1,20 @@
-<!-- HEADER: TÍTULO E AÇÕES PRINCIPAIS -->
+<div class="elite-page-header n8-flex n8-justify-between n8-align-center n8-mb-6">
+  <div>
+    <h1 class="n8-heading-xl">Financeiro</h1>
+    <p class="n8-body n8-text-muted">Gestão centralizada de contas a pagar e a receber.</p>
+  </div>
+
+  <div class="header-actions n8-flex n8-gap-3">
+    <button class="n8-btn n8-btn--danger-light" (click)="openCreateDialog('EXPENSE')">
+      <lucide-icon name="arrow-down-circle" [size]="18"></lucide-icon>
+      <span>Nova Despesa</span>
+    </button>
+    <button class="n8-btn n8-btn--success" (click)="openCreateDialog('INCOME')">
+      <lucide-icon name="arrow-up-circle" [size]="18"></lucide-icon>
+      <span>Nova Receita</span>
+    </button>
+  </div>
+</div>
 <!-- CONTROLES: FILTROS -->
 <div class="elite-controls-bar n8-mb-6">
 
